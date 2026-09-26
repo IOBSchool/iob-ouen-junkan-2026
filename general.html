@@ -76,8 +76,9 @@
 
   /* ゲストプロフィール */
   .profile-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:24px 22px;}
-  .profile-card .name{font-family:"Zen Old Mincho",serif;font-size:19px;font-weight:700;margin-bottom:4px;}
-  .profile-card .role{font-size:13px;color:var(--sub);margin-bottom:16px;}
+  .profile-photo{width:140px;height:140px;border-radius:50%;object-fit:cover;object-position:top center;display:block;margin:0 auto 18px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .profile-card .name{font-family:"Zen Old Mincho",serif;font-size:19px;font-weight:700;margin-bottom:4px;text-align:center;}
+  .profile-card .role{font-size:13px;color:var(--sub);margin-bottom:16px;text-align:center;}
   .profile-card .book{background:var(--bg);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--sub);margin:14px 0;}
   .stat-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
   .stat{flex:1 1 auto;background:#fbeee6;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--point);font-weight:700;text-align:center;}
@@ -247,6 +248,7 @@ window.IOB_PHASE = (function(){
     <div class="sec-eyebrow">ゲスト</div>
     <h2 class="sec-title">高田洋平さん</h2>
     <div class="profile-card">
+      <img class="profile-photo" src="img/takada-profile.jpg" alt="高田洋平さん" loading="lazy">
       <div class="name">高田 洋平（たかだ ようへい）さん</div>
       <div class="role">応援共創プロデューサー／「応援共創ラボBOOSTER」主宰</div>
       <p>高田さん自身、350万円の赤字を抱えた経験から、人と人との「応援」を軸に活動を広げてこられました。</p>
