@@ -350,5 +350,33 @@ function admin_(p) {
     var which = (p.which === "sameDay") ? "sameDay" : "dayBefore";
     return sendReminder_(cfg, which, String(p.test || "") === "1");
   }
+  if (action === "setupTriggers") {
+    if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" };
+    return setupTriggers();
+  }
   return { result: "unknown-action" };
+}
+
+/** 前日10/1(木)20:00・当日10/2(金)17:00(日本時間)の時間主導型トリガーを作成する。
+ *  同名トリガーが既にあれば一旦削除してから作り直す(重複実行防止)。
+ *  実行方法：Apps Scriptエディタで関数選択→setupTriggers→実行、
+ *  または ?action=setupTriggers&key=(ADMIN_KEY) をGETで叩く */
+function setupTriggers() {
+  var targets = ["sendReminderDayBefore", "sendReminderSameDay"];
+  var removed = 0;
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (targets.indexOf(t.getHandlerFunction()) !== -1) {
+      ScriptApp.deleteTrigger(t);
+      removed++;
+    }
+  });
+  ScriptApp.newTrigger("sendReminderDayBefore")
+    .timeBased()
+    .at(new Date("2026-10-01T20:00:00+09:00"))
+    .create();
+  ScriptApp.newTrigger("sendReminderSameDay")
+    .timeBased()
+    .at(new Date("2026-10-02T17:00:00+09:00"))
+    .create();
+  return { result: "ok", removedOld: removed, created: targets };
 }
