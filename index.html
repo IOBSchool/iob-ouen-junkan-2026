@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>「応援の循環」キックオフセミナー｜Institut für Organic Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --point:#f26b3b;
+    --ink:#553727;
+    --bg:#f9f7ef;
+    --second:#0085c9;
+    --sub:#85634b;
+    --line:#e6ddc9;
+    --white:#fffdf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Noto Sans JP",sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.9;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 20px;}
+  h1,h2,h3,.mincho{font-family:"Zen Old Mincho",serif;}
+
+  /* ===== ヒーロー ===== */
+  .hero{
+    position:relative;
+    background:linear-gradient(160deg,#3d2418 0%,#553727 46%,#7a4a2e 100%);
+    padding:70px 0 46px;
+    overflow:hidden;
+  }
+  .hero .wrap{position:relative;z-index:1;}
+  .hero .eyebrow{
+    color:#f2e4d6;font-size:13px;letter-spacing:.08em;margin-bottom:16px;font-weight:500;
+  }
+  .hero h1{
+    font-size:27px;font-weight:700;line-height:1.65;margin-bottom:18px;color:#fff;
+  }
+  .hero .lead{
+    font-size:15px;color:#f4e9dd;line-height:1.9;
+  }
+  .hero .logo{display:block;margin-top:26px;width:170px;max-width:52%;height:auto;
+    filter:brightness(0) invert(1);opacity:.92;}
+  @media(max-width:480px){
+    .hero{padding:52px 0 38px;}
+    .hero h1{font-size:23px;line-height:1.7;}
+    .hero .lead{font-size:14.5px;}
+    .hero .logo{width:150px;margin-top:22px;}
+    section{padding:32px 0;}
+  }
+
+  section{padding:38px 0;}
+  section.alt{background:var(--white);}
+  .sec-title{font-size:20px;font-weight:700;margin-bottom:20px;padding-left:14px;border-left:5px solid var(--point);}
+  .sec-eyebrow{font-size:12px;color:var(--second);font-weight:700;letter-spacing:.06em;margin-bottom:6px;}
+  p{margin-bottom:14px;}
+  p:last-child{margin-bottom:0;}
+  .hl{background:linear-gradient(transparent 58%, #f7e0a0 58%);font-weight:700;padding:0 1px;}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:24px 22px;margin-bottom:16px;}
+
+  /* 開催概要 */
+  .info-table{width:100%;border-collapse:collapse;font-size:15px;}
+  .info-table th,.info-table td{text-align:left;padding:12px 6px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .info-table tr:last-child th,.info-table tr:last-child td{border-bottom:none;}
+  .info-table th{width:30%;color:var(--sub);font-weight:500;white-space:nowrap;}
+  .info-table td{font-weight:700;}
+  .info-table td small{display:block;font-weight:400;font-size:13px;color:var(--sub);line-height:1.7;}
+
+  /* ゲストプロフィール */
+  .profile-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:24px 22px;}
+  .profile-card .name{font-family:"Zen Old Mincho",serif;font-size:19px;font-weight:700;margin-bottom:4px;}
+  .profile-card .role{font-size:13px;color:var(--sub);margin-bottom:16px;}
+  .profile-card .book{background:var(--bg);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--sub);margin:14px 0;}
+  .stat-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+  .stat{flex:1 1 auto;background:#fbeee6;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--point);font-weight:700;text-align:center;}
+
+  /* 当日の流れ */
+  .timeline{list-style:none;counter-reset:step;}
+  .timeline > li{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px dashed var(--line);counter-increment:step;}
+  .timeline > li:last-child{border-bottom:none;}
+  .timeline .num{flex:none;width:32px;height:32px;border-radius:50%;background:var(--point);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-family:"Zen Old Mincho",serif;font-weight:700;font-size:14px;}
+  .timeline .what b{display:block;font-size:15.5px;font-family:"Zen Old Mincho",serif;margin-bottom:4px;line-height:1.6;}
+  .timeline .what p{font-size:14px;line-height:1.85;margin-bottom:0;color:var(--sub);}
+
+  .u-block{background:#fbeee6;border-radius:12px;padding:18px 20px;margin-bottom:12px;}
+  .u-block .label{font-size:13px;font-weight:700;color:var(--point);margin-bottom:4px;}
+  .u-block p{font-size:14.5px;line-height:1.85;margin-bottom:0;}
+
+  .callout{background:#eaf5fb;border-radius:12px;padding:18px 20px;font-size:14px;color:#1a5a78;line-height:1.85;margin-top:18px;}
+
+  .band-note{background:var(--ink);color:#f3e9dc;border-radius:14px;padding:22px 20px;margin:20px 0;}
+  .band-note .ttl{font-family:"Zen Old Mincho",serif;font-size:16px;color:#fff;margin-bottom:10px;line-height:1.7;}
+  .band-note p{font-size:14px;line-height:1.9;color:#e9ddcd;margin-bottom:10px;}
+  .band-note p:last-child{margin-bottom:0;}
+  .band-note a{color:#ffd7a6;font-weight:700;}
+
+  /* フォーム */
+  .form-sec{background:var(--white);border-top:3px solid var(--point);}
+  form{margin-top:6px;}
+  .field{margin-bottom:20px;}
+  label{display:block;font-weight:700;font-size:15px;margin-bottom:8px;}
+  label .req{color:var(--point);font-size:12px;margin-left:6px;}
+  label .opt{color:var(--sub);font-size:12px;margin-left:6px;font-weight:400;}
+  input[type=text],input[type=email],select,textarea{
+    width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;font-size:16px;
+    font-family:inherit;background:#fff;color:var(--ink);
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--point);}
+  textarea{min-height:70px;resize:vertical;}
+  .radio-row{display:flex;flex-direction:column;gap:10px;}
+  .radio-opt{
+    border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+    font-size:14.5px;cursor:pointer;background:#fff;text-align:left;line-height:1.6;display:flex;align-items:center;gap:8px;
+  }
+  .radio-opt input{accent-color:var(--point);flex:none;}
+  .check{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border-radius:10px;padding:14px;font-size:14px;line-height:1.7;}
+  .check input{margin-top:5px;flex:none;width:18px;height:18px;accent-color:var(--point);}
+  .submit{
+    width:100%;background:var(--point);color:#fff;border:none;padding:17px;border-radius:12px;font-size:17px;
+    font-weight:700;font-family:"Zen Old Mincho",serif;cursor:pointer;margin-top:8px;transition:opacity .2s;
+  }
+  .submit:hover{opacity:.9;}
+  .submit:disabled{opacity:.5;cursor:not-allowed;}
+  .form-note{font-size:13px;color:var(--sub);margin-top:14px;text-align:center;line-height:1.8;}
+
+  #thanks{display:none;text-align:center;padding:30px 10px;}
+  #thanks .mincho{font-size:20px;color:var(--point);margin-bottom:14px;}
+  .meet-box{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:18px auto;max-width:460px;text-align:left;font-size:14px;line-height:1.9;}
+  .meet-box a{color:var(--point);font-weight:700;word-break:break-all;}
+  #fallback{display:none;text-align:center;padding:30px 10px;}
+  #fallback .mincho{font-family:"Zen Old Mincho",serif;font-size:19px;color:var(--point);margin-bottom:14px;}
+  .fallback-btn{
+    display:block;background:var(--point);color:#fff;text-decoration:none;
+    padding:16px;border-radius:12px;font-size:16px;font-weight:700;
+    font-family:"Zen Old Mincho",serif;margin:20px auto;max-width:320px;
+  }
+
+  .closing{
+    position:relative;text-align:center;padding:60px 20px;
+    background:linear-gradient(160deg,#3d2418 0%,#553727 60%,#7a4a2e 100%);
+  }
+  .closing .mincho{font-size:19px;line-height:1.9;color:#fff;}
+  .closing .actions{margin-top:26px;display:flex;flex-direction:column;gap:10px;max-width:320px;margin-left:auto;margin-right:auto;}
+  .closing .actions a{
+    display:block;padding:14px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;
+    border:1px solid rgba(255,255,255,.5);color:#fff;
+  }
+  .closing .actions a.primary{background:var(--point);color:#fff;border-color:var(--point);}
+
+  footer{background:var(--ink);color:#e9ddcd;text-align:center;padding:28px 20px;font-size:12px;line-height:1.9;}
+  footer a{color:#f7c9b3;text-decoration:underline;}
+
+  /* 追従CTA */
+  #stickyCta{position:fixed;left:0;right:0;bottom:0;z-index:9998;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,253,248,.96);border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(0,0,0,.08);
+    transform:translateY(110%);transition:transform .25s ease;}
+  #stickyCta.on{transform:translateY(0);}
+  #stickyCta a{display:block;max-width:640px;margin:0 auto;background:var(--point);color:#fff;text-decoration:none;
+    text-align:center;padding:13px;border-radius:10px;font-weight:700;font-family:"Zen Old Mincho",serif;font-size:15px;}
+  #stickyCta small{display:block;text-align:center;font-size:11.5px;color:var(--sub);margin-top:4px;}
+  body.has-sticky{padding-bottom:80px;}
+
+  /* 書影 */
+  .book-cover{display:flex;gap:16px;align-items:flex-start;margin:14px 0;}
+  .book-cover img{width:96px;height:auto;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.15);flex:none;}
+  .book-cover .book{flex:1;margin:0;}
+
+  /* 終了バッジ */
+  .archive-badge{background:var(--second);color:#fff;border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.8;margin-bottom:16px;}
+  .archive-badge b{display:block;font-family:"Zen Old Mincho",serif;font-size:15px;margin-bottom:4px;}
+</style>
+<script>
+/* ── 公開フェーズ切替（2026-09-26 なつこ決定・日本時間）
+   9/26(土)〜10/2(金)20:00：募集中 ／ 10/2(金)20:00〜：受付終了（アーカイブ視聴の案内・決済導線は後日別途対応のため、今回は申込フォームを閉じる）
+   確認用：?preview=close（終了後の見た目） */
+window.IOB_PHASE = (function(){
+  var order = ["open","close"], now = Date.now(), ph = "open";
+  if (now >= Date.UTC(2026, 9, 2, 11, 0, 0)) ph = "close"; // 10/2 20:00 JST
+  var p = new URLSearchParams(location.search).get("preview");
+  if (order.indexOf(p) > order.indexOf(ph)) ph = p;
+  document.documentElement.className += " phase-" + ph;
+  return ph;
+})();
+</script>
+<style>
+  .phase-open [data-phase="close"]{display:none !important;}
+  .phase-close [data-phase="open"]{display:none !important;}
+</style>
+</head>
+<body>
+
+<!-- ============ ① FV ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">IOB オーガニック専門家コース・コスメ専門家コースのみなさんへ<br>BAND「IOB 応援の循環 2026」キックオフ</div>
+    <div data-phase="open">
+      <h1>高田洋平さんと一緒に、<br>「応援が巡る関係」を体験する90分。</h1>
+      <div class="lead">2026年10月2日（金）20:00〜21:30・オンライン（Google Meet）・参加費無料<br>物販はありません。</div>
+    </div>
+    <div data-phase="close">
+      <h1>高田洋平さんと一緒に、<br>「応援が巡る関係」を体験した90分。</h1>
+      <div class="lead">2026年10月2日（金）に開催しました。<br>ご参加ありがとうございました。</div>
+    </div>
+    <img class="logo" src="iob-logo-orange.png" alt="Institut für Organic Business" width="170">
+  </div>
+</header>
+
+<!-- ============ ② 開催概要 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">「応援の循環」キックオフセミナーのご案内</div>
+    <h2 class="sec-title">10月2日（金）の夜、90分</h2>
+    <div class="archive-badge" data-phase="close">
+      <b>このセミナーは終了しました</b>
+      ご覧いただき、ありがとうございました。アーカイブ（録画）視聴については、追ってBAND「IOB 応援の循環 2026」でご案内します。
+    </div>
+    <div class="card">
+      <table class="info-table">
+        <tr><th>日時</th><td>2026年10月2日（金）20:00〜21:30<small>日本時間・90分</small></td></tr>
+        <tr><th>場所</th><td>オンライン（Google Meet）<small data-phase="open">お申し込み後の自動返信メールで、参加用のリンクをお送りします</small><small data-phase="close">当日はGoogle Meetで開催しました</small></td></tr>
+        <tr><th>参加費</th><td>無料<small>物販・商品のご案内は一切ありません</small></td></tr>
+        <tr><th>ゲスト</th><td>高田洋平さん<small>応援共創プロデューサー／「応援共創ラボBOOSTER」主宰</small></td></tr>
+        <tr><th>対象</th><td>IOB専門家コース・コスメ専門家コースのみなさん<small>同窓会に来た方も、来られなかった方も</small></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ③ はじめに ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-eyebrow">なぜ、この90分を開くのか</div>
+    <h2 class="sec-title">「応援したい」だけでは、応援は循環しない</h2>
+    <p>誰かの一歩に気づく。声をかける。自分のことも知ってもらう。必要な時には、誰かの力を借りる。</p>
+    <p>では、そんな関係はどうしたら自然に生まれるのでしょうか。</p>
+    <p>10月2日は、そのヒントを「聞いて終わり」ではなく、<span class="hl">みんなで実際にやってみる90分</span>です。</p>
+  </div>
+</section>
+
+<!-- ============ ④ ゲスト紹介 ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">ゲスト</div>
+    <h2 class="sec-title">高田洋平さん</h2>
+    <div class="profile-card">
+      <div class="name">高田 洋平（たかだ ようへい）さん</div>
+      <div class="role">応援共創プロデューサー／「応援共創ラボBOOSTER」主宰</div>
+      <p>高田さん自身、350万円の赤字を抱えた経験から、人と人との「応援」を軸に活動を広げてこられました。</p>
+      <div class="book-cover">
+        <img src="img/book-cover.jpg" alt="『お願いしないで人を動かす 心のつかみ方』書影" loading="lazy">
+        <div class="book">著書：『お願いしないで人を動かす<br>心のつかみ方』（かんき出版）</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat">クラウドファンディング<br>累計1億円以上</div>
+        <div class="stat">400人以上の<br>コミュニティを運営</div>
+        <div class="stat">月商500万円以上の<br>黒字化を実現</div>
+      </div>
+      <p style="margin-top:16px;">今回、高田さんに来ていただく理由は、単に「人脈づくりが上手な人」だからではありません。お願いして人を動かすのではなく、人と人の間にどうすれば自然に応援が生まれるのか。そして、その応援を一度きりで終わらせず、どうすれば次の人へ巡らせていけるのか。それを実践してきた高田さんと一緒に、IOBのみんなで考え、実際に体験してみたいからです。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑤ 当日の90分 ============ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-eyebrow">当日の90分</div>
+    <h2 class="sec-title">「いい話を聞いて終わり」にはしません</h2>
+    <ul class="timeline">
+      <li>
+        <div class="num">1</div>
+        <div class="what"><b>オープニング</b></div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div class="what">
+          <b>Connect</b>
+          <p>これまでに誰かに応援してもらったこと、誰かを応援したこと。自分自身の「応援の共体験」を思い出します。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div class="what">
+          <b>高田洋平さんトーク</b>
+          <p>人と人の間に応援が生まれるのはなぜか。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">4</div>
+        <div class="what">
+          <b>Commonワーク</b>
+          <p>聞いたことを自分たちの話に戻して、実際にみんなで考え、言葉にしてみます。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">5</div>
+        <div class="what">
+          <b>共有</b>
+          <p>それぞれの気づきや感じたことを持ち寄ります。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">6</div>
+        <div class="what">
+          <b>クロージング</b>
+          <p>この90分をこの日だけで終わらせず、これからの「応援の循環」につなげます。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ ⑥ こんな方に ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">こんな方に</div>
+    <h2 class="sec-title">同窓会に来た方も、来られなかった方も</h2>
+    <div class="u-block">
+      <div class="label">9月20日の同窓会に参加した</div>
+      <p>あの日生まれた「応援」を、一日だけで終わらせないための最初の90分です。</p>
+    </div>
+    <div class="u-block">
+      <div class="label">同窓会に参加していない</div>
+      <p>参加していなくても大丈夫です。専門家コース・コスメ専門家コースのみなさん全員に参加してほしいと思っています。</p>
+    </div>
+    <div class="u-block">
+      <div class="label">最近、IOBのみんなと少し離れていた</div>
+      <p>ここから、またつながり直す場所です。</p>
+    </div>
+    <div class="callout">
+      <b>物販・商品のご案内は一切ありません。</b><br>
+      何かを買ってもらうための90分ではなく、IOBのみんなで「応援の循環」をつくっていくための、最初の90分です。
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑦ 申込フォーム ============ -->
+<section class="form-sec">
+  <div class="wrap">
+    <div class="sec-eyebrow">お申し込み</div>
+    <h2 class="sec-title">「応援の循環」キックオフセミナー 申込フォーム</h2>
+
+    <div data-phase="close" class="card" style="text-align:center;">
+      <p style="margin-bottom:0;">お申し込みは終了しました。ご覧いただき、ありがとうございました。</p>
+    </div>
+
+    <div data-phase="open">
+    <div class="band-note">
+      <div class="ttl">この90分の続きは、BANDで。</div>
+      <p>「IOB 応援の循環 2026」は、IOBで学んだ仲間が近況を知り、つながり、応援を渡し合っていくための場所です。10/2のキックオフセミナーも、このBANDから始まる「応援の循環」の最初の共体験として開催します。</p>
+      <p>まだ参加していない方も、セミナーにはお申し込みいただけます。よかったら、この機会にBANDにも加わってください。</p>
+      <p><a href="https://band.us/n/a0a6b5M8hfTc8" target="_blank" rel="noopener">▼「IOB 応援の循環 2026」に参加する</a></p>
+    </div>
+
+    <form id="applyForm">
+      <div class="field">
+        <label>お名前<span class="req">必須</span></label>
+        <input type="text" name="name" placeholder="例：山田 花子" required>
+      </div>
+      <div class="field">
+        <label>メールアドレス<span class="req">必須</span></label>
+        <input type="email" name="email" placeholder="example@mail.com" required>
+      </div>
+      <div class="field">
+        <label>BAND「IOB 応援の循環 2026」への参加状況<span class="req">必須</span></label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="bandStatus" value="参加済み" required>参加済み</label>
+          <label class="radio-opt"><input type="radio" name="bandStatus" value="未参加・興味あり">未参加・興味あり</label>
+          <label class="radio-opt"><input type="radio" name="bandStatus" value="わからない">わからない</label>
+        </div>
+        <p style="font-size:12.5px;color:var(--sub);margin-top:8px;">※BAND未参加でもセミナーにはお申し込みいただけます。</p>
+      </div>
+      <div class="field">
+        <label>高田さんへの質問・聞いてみたいこと<span class="opt">任意</span></label>
+        <textarea name="question" placeholder="例：応援してもらう側になるのが苦手です。どうすればいいですか"></textarea>
+      </div>
+      <div class="field">
+        <div class="check">
+          <input type="checkbox" id="agree" required>
+          <label for="agree" style="font-weight:400;margin:0;">
+            <a href="privacy.html" style="color:var(--point);font-weight:700;">プライバシーポリシー</a>を確認し、同意のうえお申し込みします。
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="submit" id="submitBtn">「応援の循環」キックオフセミナーに申し込む（無料）</button>
+      <div class="form-note">送信後、自動返信メールにて<br>Google Meet のリンクをお送りします。</div>
+    </form>
+
+    <div id="thanks">
+      <div class="mincho">お申し込みありがとうございます。</div>
+      <p>参加用のリンクを、ご登録のメールアドレス宛にお送りします。<br>届いていなければ、迷惑メールフォルダも見てみてください。<br>それでも届かない場合は school@iob.bio までご連絡ください。</p>
+      <div class="meet-box">
+        <b>10月2日（金）20:00〜21:30（日本時間）</b><br>
+        Google Meet：<a href="https://meet.google.com/rjz-buhr-eyo" target="_blank" rel="noopener">https://meet.google.com/rjz-buhr-eyo</a><br>
+        <span style="font-size:13px;color:var(--sub);">前日と当日にも、リマインドのメールをお送りします。</span>
+      </div>
+      <p>何も持ってこなくて大丈夫です。<br>当日、画面の向こうでお会いできたら嬉しいです。</p>
+    </div>
+
+    <div id="fallback">
+      <div class="mincho">恐れ入ります。あと一手間だけお願いします。</div>
+      <p>ただいまフォームの自動送信が使えない状態です。<br>
+      下のボタンを押すと、入力いただいた内容が入ったメールが開きます。<br>
+      そのまま送信していただければ、確実にお申し込みを受け付けます。</p>
+      <a id="fallbackMail" class="fallback-btn" href="#">メールでお申し込みを送る</a>
+      <p style="font-size:13px;">うまく開かない場合は、<br>お手数ですが <b>school@iob.bio</b> 宛に<br>お名前と「応援の循環キックオフセミナーに参加します」とお送りください。</p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑧ 最後の一言 ============ -->
+<div class="closing" data-phase="open">
+  <div class="wrap">
+    <p class="mincho">応援は、ひとりでは循環しません。<br><br>10月2日、<br>その最初の一歩を一緒に踏み出しませんか。</p>
+    <div class="actions">
+      <a class="primary" href="#applyForm">申込フォームへ</a>
+    </div>
+  </div>
+</div>
+<div class="closing" data-phase="close">
+  <div class="wrap">
+    <p class="mincho">応援は、ひとりでは循環しません。<br><br>ここからも、BANDで<br>「応援の循環」を育てていきましょう。</p>
+    <div class="actions">
+      <a class="primary" href="https://band.us/n/a0a6b5M8hfTc8" target="_blank" rel="noopener">BANDへ</a>
+    </div>
+  </div>
+</div>
+
+<!-- 追従CTA -->
+<div id="stickyCta" data-phase="open"><a href="#applyForm">キックオフセミナーに申し込む（無料）</a><small>10月2日（金）20:00〜21:30</small></div>
+
+<footer>
+  Institut für Organic Business GmbH<br>
+  お問い合わせ：school@iob.bio<br><br>
+  <a href="privacy.html">プライバシーポリシー</a><br><br>
+  Copyright ©2026 Institut für Organic Business GmbH. All Rights Reserved.
+</footer>
+
+<script>
+  // 申込先GAS（「応援の循環キックオフ」申込管理スプレッドシートに紐づくウェブアプリ）
+  // 🚨コードを直したら「デプロイを管理 → 編集 → バージョン：新バージョン」で再デプロイすること。
+  const GAS_URL = "PASTE_GAS_WEBAPP_URL_HERE";
+
+  // ── 追従CTA：ファーストビューを過ぎたら出す／フォームに来たら引っ込める ──
+  (function(){
+    if (window.IOB_PHASE && window.IOB_PHASE !== "open") return;
+    var bar = document.getElementById('stickyCta');
+    var formSec = document.getElementById('applyForm');
+    if(!bar || !formSec) return;
+    document.body.classList.add('has-sticky');
+    function update(){
+      var past = window.scrollY > window.innerHeight * 0.9;
+      var atForm = formSec.getBoundingClientRect().top < window.innerHeight;
+      bar.classList.toggle('on', past && !atForm);
+    }
+    window.addEventListener('scroll', update, {passive:true});
+    window.addEventListener('resize', update);
+    update();
+  })();
+
+  const form = document.getElementById('applyForm');
+  const btn = document.getElementById('submitBtn');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!document.getElementById('agree').checked){ return; }
+    btn.disabled = true;
+    btn.textContent = "送信中…";
+
+    const data = {
+      type: "応援の循環キックオフ",
+      name: form.name.value,
+      email: form.email.value,
+      bandStatus: (form.querySelector('input[name=bandStatus]:checked') || {}).value || "",
+      question: form.question.value || ""
+    };
+
+    // ── 保険：GAS_URLが未設定のときは「送信できたフリ」をせず、メール申込に切り替える ──
+    function showFallback(){
+      var lines = [
+        "お名前：" + data.name,
+        "メールアドレス：" + data.email,
+        "BAND参加状況：" + data.bandStatus,
+        "高田さんへの質問：" + (data.question || "（なし）")
+      ].join("\n");
+      document.getElementById('fallbackMail').href =
+        "mailto:school@iob.bio"
+        + "?subject=" + encodeURIComponent("「応援の循環」キックオフセミナーに参加します（" + data.name + "）")
+        + "&body=" + encodeURIComponent("「応援の循環」キックオフセミナーに申し込みます。\n\n" + lines + "\n");
+      form.style.display = "none";
+      var fb = document.getElementById('fallback');
+      fb.style.display = "block";
+      window.scrollTo({top: fb.offsetTop - 40, behavior:"smooth"});
+    }
+
+    if (!GAS_URL || GAS_URL.indexOf("PASTE_") === 0 || GAS_URL.indexOf("http") !== 0) {
+      showFallback();
+      return;
+    }
+
+    // GASは exec → googleusercontent へ302リダイレクトされ、POSTがGETに変換されることがある。
+    // そのため payload をURLエンコードで送り、GAS側は doPost / doGet の両方で受ける。
+    fetch(GAS_URL, {
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"application/x-www-form-urlencoded;charset=utf-8"},
+      body: new URLSearchParams({ payload: JSON.stringify(data) })
+    }).then(function(){
+      form.style.display="none";
+      document.getElementById('thanks').style.display="block";
+      window.scrollTo({top:document.getElementById('thanks').offsetTop-40, behavior:"smooth"});
+    }).catch(function(){
+      showFallback();
+    });
+  });
+</script>
+
+</body>
+</html>
