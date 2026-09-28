@@ -232,6 +232,15 @@ function reminderBody_(name, key) {
 /* ============ 申込受付 ============ */
 function applyEvent_(ss, cfg, d) {
   var sheet = eventSheet_(ss, cfg);
+  // 二重登録防止：同じメールアドレスが直近10分以内にあれば、何もせず成功を返す（LP側の再送対策）
+  var lr = sheet.getLastRow();
+  if (lr >= 2 && d.email) {
+    var from = Math.max(2, lr - 29), rows = sheet.getRange(from, 1, lr - from + 1, 3).getDisplayValues();
+    for (var q = rows.length - 1; q >= 0; q--) {
+      var t = Date.parse(String(rows[q][0]).replace(/\//g, "-").replace(" ", "T") + "+09:00");
+      if (String(rows[q][2]).trim().toLowerCase() === String(d.email).trim().toLowerCase() && Date.now() - t < 10 * 60 * 1000) return { result: "ok", dup: true };
+    }
+  }
   var ts = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
   var vals = cfg.hasBand
     ? [ts, d.name || "", d.email || "", d.bandStatus || "", d.question || "", "", ""]

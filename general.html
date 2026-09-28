@@ -487,19 +487,21 @@ window.IOB_PHASE = (function(){
       return;
     }
 
-    // GASは exec → googleusercontent へ302リダイレクトされ、POSTがGETに変換されることがある。
-    // そのため payload をURLエンコードで送り、GAS側は doPost / doGet の両方で受ける。
-    fetch(GAS_URL, {
-      method:"POST",
-      mode:"no-cors",
-      headers:{"Content-Type":"application/x-www-form-urlencoded;charset=utf-8"},
-      body: new URLSearchParams({ payload: JSON.stringify(data) })
-    }).then(function(){
+    // 🚨GASは混雑時にまれに404/タイムアウトを返す。応答を確認し、失敗なら最大3回まで再送する（no-corsだと失敗に気づけず申込が消えるため）。
+    // 二重登録はGAS側で「同じメールから10分以内」を無視して防ぐ。
+    var payload = new URLSearchParams({ payload: JSON.stringify(data) });
+    function attempt(n){
+      var c = new AbortController(), to = setTimeout(function(){ c.abort(); }, 30000);
+      return fetch(GAS_URL, { method:"POST", signal:c.signal, headers:{"Content-Type":"application/x-www-form-urlencoded;charset=utf-8"}, body: payload })
+        .then(function(r){ clearTimeout(to); return r.json(); })
+        .then(function(j){ if (j && j.result === "ok") return true; throw new Error("ng"); })
+        .catch(function(){ clearTimeout(to); if (n >= 3) return false; return new Promise(function(res){ setTimeout(res, 1500); }).then(function(){ return attempt(n + 1); }); });
+    }
+    attempt(1).then(function(ok){
+      if (!ok) { showFallback(); return; }
       form.style.display="none";
       document.getElementById('thanks').style.display="block";
       window.scrollTo({top:document.getElementById('thanks').offsetTop-40, behavior:"smooth"});
-    }).catch(function(){
-      showFallback();
     });
   });
 </script>
