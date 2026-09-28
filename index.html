@@ -76,8 +76,9 @@
 
   /* ゲストプロフィール */
   .profile-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:24px 22px;}
-  .profile-card .name{font-family:"Zen Old Mincho",serif;font-size:19px;font-weight:700;margin-bottom:4px;}
-  .profile-card .role{font-size:13px;color:var(--sub);margin-bottom:16px;}
+  .profile-photo{width:140px;height:140px;border-radius:50%;object-fit:cover;object-position:top center;display:block;margin:0 auto 18px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+  .profile-card .name{font-family:"Zen Old Mincho",serif;font-size:19px;font-weight:700;margin-bottom:4px;text-align:center;}
+  .profile-card .role{font-size:13px;color:var(--sub);margin-bottom:16px;text-align:center;}
   .profile-card .book{background:var(--bg);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--sub);margin:14px 0;}
   .stat-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
   .stat{flex:1 1 auto;background:#fbeee6;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--point);font-weight:700;text-align:center;}
@@ -252,9 +253,10 @@ window.IOB_PHASE = (function(){
     <div class="sec-eyebrow">ゲスト</div>
     <h2 class="sec-title">高田洋平さん</h2>
     <div class="profile-card">
+      <img class="profile-photo" src="img/takada-profile.jpg" alt="高田洋平さん" loading="lazy">
       <div class="name">高田 洋平（たかだ ようへい）さん</div>
       <div class="role">応援共創プロデューサー／「応援共創ラボBOOSTER」主宰</div>
-      <p>高田さん自身、350万円の赤字を経験したところから、「応援」を軸に人と人がつながる仕組みを実践してこられました。</p>
+      <p>350万円の赤字を経験したことをきっかけに、「応援」を軸にした人と人とのつながりを実践。</p>
       <div class="book-cover">
         <img src="img/book-cover.jpg" alt="『お願いしないで人を動かす 心のつかみ方』書影" loading="lazy">
         <div class="book">著書：『お願いしないで人を動かす<br>心のつかみ方』（かんき出版）</div>
@@ -262,9 +264,10 @@ window.IOB_PHASE = (function(){
       <div class="stat-row">
         <div class="stat">オンライン集客<br>累計10万人以上</div>
         <div class="stat">クラウドファンディング<br>累計支援額 約2億円</div>
-        <div class="stat">「おうえんフェス」<br>2年連続1,000人動員</div>
+        <div class="stat">「Claude Code実践会」<br>3,200人超が参加</div>
       </div>
-      <p style="margin-top:16px;">まさに「人が人を応援することで、大きな動きが生まれる」現場を数多くつくってきた方です。今回、高田さんに来ていただく理由は、単に「人を集めるのが上手な人」だからではありません。人と人の間に、どうすれば自然に応援が生まれるのか。そして、その応援をどうすれば一度きりで終わらせず、次の人へ巡らせていけるのか。それを実践してきた高田さんと一緒に、IOBのみんなで考え、体験してみたいからです。</p>
+      <p style="margin-top:16px;">現在もAI共創コミュニティ「Claude Code実践会」に3,200人超が参加するなど、「人が集まり、つながり、共に動き出す場」を実践の中でつくり続けています。</p>
+      <p>今回、高田さんに来ていただく理由は、単に「人を集めるのが上手な人」だからではありません。人と人の間にどうすれば自然に応援が生まれるのか。そして、その応援を一度きりで終わらせず、どうすれば次の人へ巡らせていけるのか。それを実践してきた高田さんと一緒に、IOBのみんなで考え、体験してみたいからです。</p>
     </div>
   </div>
 </section>
