@@ -1,23 +1,17 @@
 /**
  * 「応援の循環」キックオフセミナー（2026年10月2日（金）20:00〜22:00 JST）
- * ── 申込管理シート連携 + 自動返信メール + リマインド6通
- * ── 既存生向け（IOB専門家コース・コスメ専門家コース）と一般向けの2つのLPから同じGASへ送信され、
- *    type で振り分けて別タブに記録する
+ * ── 申込管理シート連携 + 自動返信メール + リマインド
+ * ── 既存生向けと一般向けの2つのLPから同じGASへ送信され、type で振り分けて別タブに記録する
  *
- * 【リマインド（日本時間・6回）】
- *   9/29(火)20:00 あと3日 ／ 9/30(水)20:00 あと2日 ／ 10/1(木)20:00 明日
- *   10/2(金)08:00 今夜 ／ 19:00 あと1時間 ／ 20:00 始まりました
- *   → setupTriggers を1回実行すると6つの時間トリガーが作られる（何度実行しても重複しない）
+ * 【リマインドは2系統】
+ *   ①Flodesk（本命）：申込のたびに、まだ送信時刻が来ていない回のセグメント「応援の循環_R1〜R6」へ自動追加。
+ *      Flodesk側のワークフロー（開始条件＝セグメントに追加されたとき→指定日時まで待機→メール）が送る。
+ *      スクリプトプロパティ FLODESK_API_KEY が必要（なつこさんが登録。AIは触らない）。
+ *   ②GmailのGAS送信（保険）：setupTriggers で6つの時間トリガーを作る。Flodeskの完成・テスト確認後に
+ *      ?action=stopGmailReminders で止める（重複送信を避けるため）。
+ *   R1 9/29 20:00 ／ R2 9/30 20:00 ／ R3 10/1 20:00 ／ R4 10/2 08:00 ／ R5 10/2 19:00 ／ R6 10/2 20:00（日本時間）
  *
- * 【送信経路】
- *   スクリプトプロパティ BREVO_API_KEY と BREVO_ENABLED=true があればBrevo(1日300通)で送り、
- *   なければ／失敗したらGmail(1日100通)で送る。キーの登録はなつこさん本人が行う（AIは触らない）。
- *   事務局宛の申込通知だけは常にGmail直送（Brevo→iob.bio宛が届かなかった前例があるため）。
- *
- * 🚨有料化・決済導線は一切なし（ライブもアーカイブも、既存生向けも一般向けも無料）
- * 🚨一斉送信の4原則：①送る前に残数確認 ②1人ずつ送信済みを記録し再実行時は未送信だけ
- *   ③例外が出たらその回は打ち切る ④件数が多い場合はBrevoへ
- * 🚨個人情報をAIに返さない：inspect は件数・見出し・最終行の送信結果だけを返す
+ * 🚨有料化・決済導線は一切なし。個人情報をAIに返さない：inspect等は件数・見出しだけを返す
  */
 
 const CONFIG = {
@@ -56,7 +50,8 @@ const EVENTS = {
     hasBand: false
   }
 };
-function headersOf_(cfg) { return cfg.base.concat(REMINDERS.map(function (r) { return r.label; })); }
+function headersOf_(cfg) { return cfg.base.concat(REMINDERS.map(function (r) { return r.label; }), ["Flodesk追加"]); }
+function flodeskCol_(cfg) { return cfg.base.length + REMINDERS.length + 1; }
 function reminderCol_(cfg, key) {
   for (var i = 0; i < REMINDERS.length; i++) if (REMINDERS[i].key === key) return cfg.base.length + 1 + i;
   return 0;
@@ -86,38 +81,76 @@ function signature_() {
          "──────";
 }
 
-/* ============ メール送信（Brevo優先・失敗時Gmail） ============ */
-function brevoOn_() {
-  var p = PropertiesService.getScriptProperties();
-  return !!p.getProperty("BREVO_API_KEY") && p.getProperty("BREVO_ENABLED") === "true";
-}
+/* ============ メール送信（Gmail） ============ */
 function gmailOpts_() {
   var opts = { name: CONFIG.SENDER_NAME };
   try { if (GmailApp.getAliases().indexOf(CONFIG.SENDER_EMAIL) !== -1) opts.from = CONFIG.SENDER_EMAIL; } catch (e) {}
   return opts;
 }
-/** 戻り値は "brevo" か "gmail"。🚨Brevoは201でも送信元未認証だと裏で弾く → 成功判定はBrevo Logsで */
-function sendMail_(to, subject, body, forceBrevo) {
-  var key = PropertiesService.getScriptProperties().getProperty("BREVO_API_KEY");
-  if (key && (forceBrevo || brevoOn_())) {
-    try {
-      var res = UrlFetchApp.fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "post", contentType: "application/json",
-        headers: { "api-key": key, accept: "application/json" },
-        payload: JSON.stringify({ sender: { email: CONFIG.SENDER_EMAIL, name: CONFIG.SENDER_NAME }, to: [{ email: to }], subject: subject, textContent: body }),
-        muteHttpExceptions: true
-      });
-      var code = res.getResponseCode();
-      if (code === 201 || code === 202) return "brevo";
-      console.error("Brevo失敗 HTTP " + code + " → Gmailで送信");
-    } catch (err) { console.error("Brevoエラー " + err + " → Gmailで送信"); }
-  }
+function sendMail_(to, subject, body) {
   GmailApp.sendEmail(to, subject, body, gmailOpts_());
   return "gmail";
 }
-/** エディタから実行：Brevo経由で自分宛にテスト送信（BREVO_API_KEY登録後） */
-function testBrevoSend() {
-  Logger.log("送信経路: " + sendMail_(TEST_EMAIL, "【テスト】Brevo経由の送信確認（応援の循環GAS）", "Brevo経由の送信テストです。\n" + new Date(), true));
+
+/* ============ Flodesk連携（申込者をリマインド用セグメントへ自動追加） ============ */
+const FLODESK_TEST_SEGMENT = "応援の循環_テスト";
+function segName_(i) { return "応援の循環_R" + (i + 1); }
+function flodeskKey_() { return PropertiesService.getScriptProperties().getProperty("FLODESK_API_KEY"); }
+function flodeskFetch_(method, path, payload) {
+  var opt = { method: method, contentType: "application/json", muteHttpExceptions: true,
+    headers: { Authorization: "Basic " + Utilities.base64Encode(flodeskKey_() + ":") } };
+  if (payload) opt.payload = JSON.stringify(payload);
+  return UrlFetchApp.fetch("https://api.flodesk.com/v1" + path, opt);
+}
+/** セグメント名→IDの対応（Flodeskから取得。6時間キャッシュ） */
+function segmentIds_() {
+  var cache = CacheService.getScriptCache(), hit = cache.get("segids");
+  if (hit) return JSON.parse(hit);
+  var map = {};
+  for (var page = 1; page <= 10; page++) {
+    var res = flodeskFetch_("get", "/segments?per_page=100&page=" + page);
+    if (res.getResponseCode() !== 200) throw new Error("Flodesk segments HTTP " + res.getResponseCode());
+    var data = JSON.parse(res.getContentText());
+    var list = data.data || data.segments || [];
+    list.forEach(function (sg) { map[sg.name] = sg.id; });
+    if (list.length < 100) break;
+  }
+  cache.put("segids", JSON.stringify(map), 21600);
+  return map;
+}
+/** 申込者を、まだ送信時刻が来ていない回のセグメントへ追加。戻り値は状態の短い文字列 */
+function flodeskAdd_(email, name, testSegment) {
+  if (!flodeskKey_()) return "Flodesk未設定";
+  var ids = segmentIds_(), want = [], missing = [];
+  if (testSegment) { want = [FLODESK_TEST_SEGMENT]; }
+  else {
+    var limit = Date.now() + 5 * 60 * 1000;                       // 5分以内に迫った回は間に合わないので追加しない
+    REMINDERS.forEach(function (r, i) { if (new Date(r.at).getTime() > limit) want.push(segName_(i)); });
+  }
+  if (!want.length) return "追加対象なし（全て送信時刻を過ぎている）";
+  var segIds = [];
+  want.forEach(function (n) { if (ids[n]) segIds.push(ids[n]); else missing.push(n); });
+  if (missing.length) { CacheService.getScriptCache().remove("segids"); return "ERR セグメント未作成: " + missing.join(","); }
+  var res = flodeskFetch_("post", "/subscribers", { email: email, first_name: name, segment_ids: segIds });
+  var code = res.getResponseCode();
+  return (code >= 200 && code < 300) ? "追加OK " + segIds.length + "件" : "ERR HTTP " + code;
+}
+/** 既存の申込者を一括でセグメントへ追加（件数だけ返す。氏名・メールは返さない） */
+function backfillFlodesk_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet(), out = { added: 0, failed: 0, skipped: 0, noKey: !flodeskKey_() };
+  if (out.noKey) return out;
+  for (var type in EVENTS) {
+    var cfg = EVENTS[type], sh = eventSheet_(ss, cfg), col = flodeskCol_(cfg), width = headersOf_(cfg).length;
+    for (var r = 2; r <= sh.getLastRow(); r++) {
+      var v = sh.getRange(r, 1, 1, width).getValues()[0], name = String(v[1] || ""), email = String(v[2] || "").trim();
+      if (!email || (name === TEST_NAME && email === TEST_EMAIL)) { out.skipped++; continue; }
+      if (String(v[col - 1]).indexOf("追加OK") === 0) { out.skipped++; continue; }
+      var st = flodeskAdd_(email, name, false);
+      sh.getRange(r, col).setValue(st);
+      if (st.indexOf("追加OK") === 0) out.added++; else out.failed++;
+    }
+  }
+  return out;
 }
 
 /* ============ 本文 ============ */
@@ -195,7 +228,7 @@ function applyEvent_(ss, cfg, d) {
   var vals = cfg.hasBand
     ? [ts, d.name || "", d.email || "", d.bandStatus || "", d.question || "", "", ""]
     : [ts, d.name || "", d.email || "", d.question || "", "", ""];
-  for (var i = 0; i < REMINDERS.length; i++) vals.push("");
+  for (var i = 0; i < REMINDERS.length + 1; i++) vals.push("");
   sheet.appendRow(vals);
   var rowNum = sheet.getLastRow();
   var notifyCol = cfg.base.length - 1, replyCol = cfg.base.length;
@@ -220,6 +253,8 @@ function applyEvent_(ss, cfg, d) {
       replyStatus = "返信OK " + ts + "（" + via + "）";
     } catch (e2) { replyStatus = "返信ERR: " + e2; }
     sheet.getRange(rowNum, replyCol).setValue(replyStatus);
+    try { sheet.getRange(rowNum, flodeskCol_(cfg)).setValue(flodeskAdd_(d.email, d.name || "", false)); }
+    catch (e3) { sheet.getRange(rowNum, flodeskCol_(cfg)).setValue("ERR " + e3); }
   }
   return { result: "ok" };
 }
@@ -284,11 +319,10 @@ function sendReminder_(cfg, key, testOnly) {
     pending.push({ row: r, name: name, email: email });
   }
 
-  var brevo = brevoOn_();
-  var remaining = brevo ? 300 : MailApp.getRemainingDailyQuota();
+  var remaining = MailApp.getRemainingDailyQuota();
   if (pending.length > remaining) {
     console.error("リマインド中止：送信枠不足 sheet=" + cfg.sheet + " pending=" + pending.length + " remaining=" + remaining);
-    return { result: "abort", reason: "送信枠が足りないので送らなかった", key: key, pending: pending.length, remaining: remaining, brevo: brevo };
+    return { result: "abort", reason: "送信枠が足りないので送らなかった", key: key, pending: pending.length, remaining: remaining };
   }
 
   var sent = 0, failed = 0, subject = reminderSubject_(key);
@@ -305,7 +339,7 @@ function sendReminder_(cfg, key, testOnly) {
       break;
     }
   }
-  return { result: "ok", key: key, testOnly: !!testOnly, sent: sent, failed: failed, skippedSent: skippedSent, skippedDup: skippedDup, remainingBefore: remaining, brevo: brevo };
+  return { result: "ok", key: key, testOnly: !!testOnly, sent: sent, failed: failed, skippedSent: skippedSent, skippedDup: skippedDup, remainingBefore: remaining };
 }
 
 /** 6つの時間トリガーを作る（旧2本・同名は削除して作り直す＝重複しない） */
@@ -324,24 +358,21 @@ function setupTriggers() {
   return { result: "ok", removedOld: removed, created: created };
 }
 
-/** 「Flodesk除外用」タブ：両タブの申込者メールアドレスを1列にまとめる（CSVでダウンロード→Flodeskの申込済みセグメントへ取り込み） */
-function setupExportTab() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var tab = ss.getSheetByName("Flodesk除外用") || ss.insertSheet("Flodesk除外用");
-  tab.clear();
-  tab.getRange("A1").setValue("email");
-  var a = "'" + EVENTS["応援の循環キックオフ"].sheet + "'!C2:C";
-  var b = "'" + EVENTS["応援の循環キックオフ_一般"].sheet + "'!C2:C";
-  tab.getRange("A2").setFormula('=IFERROR(QUERY({' + a + ';' + b + '},"select * where Col1 <> \'\'",0),"")');
-  tab.getRange("C1").setValue("使い方：ファイル→ダウンロード→CSV（このタブが開いている状態で）。Flodeskの「応援の循環_申込済み」セグメントに取り込み、告知の配信で「除外」に指定する。新しい申込が入るたびに、この一覧も自動で増える。");
-  return { result: "ok", tab: "Flodesk除外用" };
+/** Gmail(GAS)のリマインドを止める：6つの時間トリガーを削除。Flodeskのテスト完了後に1回だけ実行 */
+function stopGmailReminders() {
+  var names = ["sendReminderD3", "sendReminderD2", "sendReminderD1", "sendReminderM", "sendReminderH1", "sendReminderS", "sendReminderDayBefore", "sendReminderSameDay"];
+  var removed = 0;
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (names.indexOf(t.getHandlerFunction()) !== -1) { ScriptApp.deleteTrigger(t); removed++; } });
+  return { result: "ok", removedTriggers: removed };
 }
 
 /* ============ 保守用GET（個人情報は返さない） ============ */
 function admin_(p) {
   var action = String(p.action || "");
   if (action === "setupTriggers") { if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" }; return setupTriggers(); }
-  if (action === "setupExportTab") { if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" }; return setupExportTab(); }
+  if (action === "stopGmailReminders") { if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" }; return stopGmailReminders(); }
+  if (action === "backfillFlodesk") { if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" }; return backfillFlodesk_(); }
+  if (action === "flodeskTest") { if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" }; try { return { result: flodeskAdd_(TEST_EMAIL, TEST_NAME, true) }; } catch (e) { return { result: "ERR " + e }; } }
   var cfg = EVENTS[p.type] || EVENTS["応援の循環キックオフ"];
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = eventSheet_(ss, cfg);
@@ -361,7 +392,7 @@ function admin_(p) {
       REMINDERS.forEach(function (rm) { if (String(v[reminderCol_(cfg, rm.key) - 1]).indexOf("送信OK") === 0) sent[rm.key]++; });
     }
     return { sheet: cfg.sheet, dataRows: Math.max(lastRow - 1, 0), headers: sheet.getRange(1, 1, 1, width).getValues()[0],
-             tz: Session.getScriptTimeZone(), gmailRemaining: MailApp.getRemainingDailyQuota(), brevo: brevoOn_(),
+             tz: Session.getScriptTimeZone(), gmailRemaining: MailApp.getRemainingDailyQuota(), flodeskKey: !!flodeskKey_(),
              triggers: ScriptApp.getProjectTriggers().length, sent: sent, tests: tests, lastRowStatus: last };
   }
   if (action === "clearTest") {
