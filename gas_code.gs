@@ -1,74 +1,79 @@
 /**
  * 「応援の循環」キックオフセミナー（2026年10月2日（金）20:00〜22:00 JST）
- * ── 申込管理シート連携 + 自動返信メール + リマインド
- * ── 既存生向け（IOB専門家コース・コスメ専門家コース）と一般向け（オーガニックをつくる人・届ける人・選ぶ人）の
- *    2つのLPから同じGASへ送信され、type で振り分けて別タブに記録する
+ * ── 申込管理シート連携 + 自動返信メール + リマインド6通
+ * ── 既存生向け（IOB専門家コース・コスメ専門家コース）と一般向けの2つのLPから同じGASへ送信され、
+ *    type で振り分けて別タブに記録する
  *
- * 【セットアップ手順】
- * 1. Googleスプレッドシートを新規作成する（例：「応援の循環キックオフ_申込管理」）
- * 2. そのシートで「拡張機能 → Apps Script」を開き、このコードを全部貼り付ける
- * 3. 「デプロイ → 新しいデプロイ → 種類：ウェブアプリ」
- *      - 次のユーザーとして実行：自分
- *      - アクセスできるユーザー：全員
- * 4. 発行された「ウェブアプリURL」をコピーし、index.html と general.html 両方の
- *      const GAS_URL = "PASTE_GAS_WEBAPP_URL_HERE";
- *    に貼り付けて再デプロイする
- * 5. Apps Script の「トリガー」画面で「時間主導型 → 特定の日時」を2つ設定する
- *      - sendReminderDayBefore … 10月1日（木）20:00頃（日本時間）
- *      - sendReminderSameDay   … 10月2日（金）17:00頃（日本時間）
- *    （トリガーのタイムゾーンは Apps Script の既定タイムゾーンに従う。
- *      ?action=inspect の tz で確認できる。この2本は既存生向け・一般向け両方のシートに送る）
+ * 【リマインド（日本時間・6回）】
+ *   9/29(火)20:00 あと3日 ／ 9/30(水)20:00 あと2日 ／ 10/1(木)20:00 明日
+ *   10/2(金)08:00 今夜 ／ 19:00 あと1時間 ／ 20:00 始まりました
+ *   → setupTriggers を1回実行すると6つの時間トリガーが作られる（何度実行しても重複しない）
  *
- * 【注意】再デプロイのときは必ず「新バージョン」を選ぶこと。
- *         「アクセスできるユーザー：全員」でないとLPから叩けない。
+ * 【送信経路】
+ *   スクリプトプロパティ BREVO_API_KEY と BREVO_ENABLED=true があればBrevo(1日300通)で送り、
+ *   なければ／失敗したらGmail(1日100通)で送る。キーの登録はなつこさん本人が行う（AIは触らない）。
+ *   事務局宛の申込通知だけは常にGmail直送（Brevo→iob.bio宛が届かなかった前例があるため）。
  *
- * 🚨有料化・決済導線は一切なし（2026-09-26 なつこさん最終確認：ライブもアーカイブも、
- *    既存生向けも一般向けも、すべて無料。「シェアしたら無料」等の条件付けもしない）
- * 🚨一斉送信の4原則（過去の事故の再発防止）：
- *   ①送る前に残数確認 ②1人ずつ送信済みを記録し、再実行時は未送信だけ送る
- *   ③例外が出たらその回は打ち切る ④件数が多い場合は別途相談する
+ * 🚨有料化・決済導線は一切なし（ライブもアーカイブも、既存生向けも一般向けも無料）
+ * 🚨一斉送信の4原則：①送る前に残数確認 ②1人ずつ送信済みを記録し再実行時は未送信だけ
+ *   ③例外が出たらその回は打ち切る ④件数が多い場合はBrevoへ
  * 🚨個人情報をAIに返さない：inspect は件数・見出し・最終行の送信結果だけを返す
  */
 
 const CONFIG = {
   SENDER_NAME: "IOBオーガニックスクール事務局",
-  SENDER_EMAIL: "school@iob.bio",   // Gmailの送信元エイリアスに登録済みの場合のみ反映される
-  NOTIFY_TO: "school@iob.bio"       // 申込通知の受信先（カンマ区切りで複数可）
+  SENDER_EMAIL: "school@iob.bio",
+  NOTIFY_TO: "school@iob.bio"
 };
 
 const MEET = "https://meet.google.com/rjz-buhr-eyo";
 const WHEN = "10月2日（金）20:00〜22:00（日本時間）";
 const BAND_URL = "https://band.us/n/a0a6b5M8hfTc8";
-const ADMIN_KEY = "zICLZ91dIQA5ZjFN200sAjhk";   // GETからリマインドを手動実行するときの合言葉（トリガー実行には不要）
+const ADMIN_KEY = "zICLZ91dIQA5ZjFN200sAjhk";
 const TEST_NAME = "テスト（アーニャ）";
 const TEST_EMAIL = "organiclifeingermany@gmail.com";
+
+/** リマインド6回（key, 送信日時, 見出し列名） */
+const REMINDERS = [
+  { key: "d3", at: "2026-09-29T20:00:00+09:00", label: "リマインド9/29(3日前)" },
+  { key: "d2", at: "2026-09-30T20:00:00+09:00", label: "リマインド9/30(2日前)" },
+  { key: "d1", at: "2026-10-01T20:00:00+09:00", label: "リマインド10/1(前日)" },
+  { key: "m",  at: "2026-10-02T08:00:00+09:00", label: "リマインド10/2朝" },
+  { key: "h1", at: "2026-10-02T19:00:00+09:00", label: "リマインド10/2 19時" },
+  { key: "s",  at: "2026-10-02T20:00:00+09:00", label: "リマインド10/2 20時" }
+];
 
 /** 既存生向け・一般向けのシート設定。BAND参加状況の列は既存生向けだけにある */
 const EVENTS = {
   "応援の循環キックオフ": {
     sheet: "応援の循環キックオフ申込",
-    headers: ["申込日時", "お名前", "メールアドレス", "BAND参加状況", "高田さんへの質問", "通知結果", "返信結果", "前日リマインド", "当日リマインド"],
-    hasBand: true,
-    colDayBefore: 8, // H列
-    colSameDay: 9    // I列
+    base: ["申込日時", "お名前", "メールアドレス", "BAND参加状況", "高田さんへの質問", "通知結果", "返信結果"],
+    hasBand: true
   },
   "応援の循環キックオフ_一般": {
     sheet: "応援の循環キックオフ申込_一般",
-    headers: ["申込日時", "お名前", "メールアドレス", "高田さんへの質問", "通知結果", "返信結果", "前日リマインド", "当日リマインド"],
-    hasBand: false,
-    colDayBefore: 7, // G列
-    colSameDay: 8    // H列
+    base: ["申込日時", "お名前", "メールアドレス", "高田さんへの質問", "通知結果", "返信結果"],
+    hasBand: false
   }
 };
+function headersOf_(cfg) { return cfg.base.concat(REMINDERS.map(function (r) { return r.label; })); }
+function reminderCol_(cfg, key) {
+  for (var i = 0; i < REMINDERS.length; i++) if (REMINDERS[i].key === key) return cfg.base.length + 1 + i;
+  return 0;
+}
 
 function eventSheet_(ss, cfg) {
+  var headers = headersOf_(cfg);
   var sh = ss.getSheetByName(cfg.sheet);
   if (!sh) {
     sh = ss.insertSheet(cfg.sheet);
-    sh.appendRow(cfg.headers);
-    sh.getRange(1, 1, 1, cfg.headers.length).setFontWeight("bold");
+    sh.appendRow(headers);
+    sh.setFrozenRows(1);
+  } else if (sh.getRange(1, headers.length).getValue() !== headers[headers.length - 1]) {
+    sh.getRange(1, 1, 1, headers.length).setValues([headers]);   // 見出しを最新（リマインド6列）に更新
     sh.setFrozenRows(1);
   }
+  sh.getRange(1, 1, 1, headers.length).setFontWeight("bold");
   return sh;
 }
 
@@ -81,16 +86,41 @@ function signature_() {
          "──────";
 }
 
-/** 送信オプション（差出人名＋school@iob.bio がGmailのエイリアスにあれば from も設定） */
-function mailOpts_() {
+/* ============ メール送信（Brevo優先・失敗時Gmail） ============ */
+function brevoOn_() {
+  var p = PropertiesService.getScriptProperties();
+  return !!p.getProperty("BREVO_API_KEY") && p.getProperty("BREVO_ENABLED") === "true";
+}
+function gmailOpts_() {
   var opts = { name: CONFIG.SENDER_NAME };
-  try {
-    if (GmailApp.getAliases().indexOf(CONFIG.SENDER_EMAIL) !== -1) opts.from = CONFIG.SENDER_EMAIL;
-  } catch (e) {}
+  try { if (GmailApp.getAliases().indexOf(CONFIG.SENDER_EMAIL) !== -1) opts.from = CONFIG.SENDER_EMAIL; } catch (e) {}
   return opts;
 }
+/** 戻り値は "brevo" か "gmail"。🚨Brevoは201でも送信元未認証だと裏で弾く → 成功判定はBrevo Logsで */
+function sendMail_(to, subject, body, forceBrevo) {
+  var key = PropertiesService.getScriptProperties().getProperty("BREVO_API_KEY");
+  if (key && (forceBrevo || brevoOn_())) {
+    try {
+      var res = UrlFetchApp.fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "post", contentType: "application/json",
+        headers: { "api-key": key, accept: "application/json" },
+        payload: JSON.stringify({ sender: { email: CONFIG.SENDER_EMAIL, name: CONFIG.SENDER_NAME }, to: [{ email: to }], subject: subject, textContent: body }),
+        muteHttpExceptions: true
+      });
+      var code = res.getResponseCode();
+      if (code === 201 || code === 202) return "brevo";
+      console.error("Brevo失敗 HTTP " + code + " → Gmailで送信");
+    } catch (err) { console.error("Brevoエラー " + err + " → Gmailで送信"); }
+  }
+  GmailApp.sendEmail(to, subject, body, gmailOpts_());
+  return "gmail";
+}
+/** エディタから実行：Brevo経由で自分宛にテスト送信（BREVO_API_KEY登録後） */
+function testBrevoSend() {
+  Logger.log("送信経路: " + sendMail_(TEST_EMAIL, "【テスト】Brevo経由の送信確認（応援の循環GAS）", "Brevo経由の送信テストです。\n" + new Date(), true));
+}
 
-/** 申込直後の自動返信（Meetリンク・日時）。既存生向けはBAND未参加者にBAND案内を添える。一般向けは既存生限定BANDへは案内しない */
+/* ============ 本文 ============ */
 function applyReplyBody(cfg, d) {
   var bandBlock = "";
   if (cfg.hasBand && d.bandStatus !== "参加済み") {
@@ -100,20 +130,14 @@ function applyReplyBody(cfg, d) {
       "よかったら、この機会にBANDにも加わってください。\n" +
       BAND_URL + "\n\n\n";
   }
-  var recapBlock = cfg.hasBand
-    ? "■ お申し込み内容（控え）\n" +
-      "BAND参加状況：" + (d.bandStatus || "") + "\n" +
-      "高田さんへの質問：" + (d.question || "（なし）") + "\n\n"
-    : "■ お申し込み内容（控え）\n" +
-      "高田さんへの質問：" + (d.question || "（なし）") + "\n\n";
-
+  var recapBlock = "■ お申し込み内容（控え）\n" +
+    (cfg.hasBand ? "BAND参加状況：" + (d.bandStatus || "") + "\n" : "") +
+    "高田さんへの質問：" + (d.question || "（なし）") + "\n\n";
   return d.name + " 様\n\n" +
     "IOBオーガニックスクール事務局です。\n" +
     "「応援の循環」キックオフセミナーにお申し込みいただき、ありがとうございます。\n\n" +
-    "■ 日時\n" +
-    WHEN + "\n\n" +
-    "■ 参加用リンク（Google Meet）\n" +
-    MEET + "\n" +
+    "■ 日時\n" + WHEN + "\n\n" +
+    "■ 参加用リンク（Google Meet）\n" + MEET + "\n" +
     "時間になったら、このリンクを開いてください。\n" +
     "カメラは切ったままでも、聞いているだけでも大丈夫です。\n\n" +
     "■ 当日やること（2時間）\n" +
@@ -125,7 +149,7 @@ function applyReplyBody(cfg, d) {
     "・クロージング\n\n" +
     bandBlock +
     "■ リマインド\n" +
-    "前日と当日にも、このメールアドレス宛にリマインドをお送りします。\n\n" +
+    "開催日までのあいだ、このメールアドレス宛にリマインドをお送りします。\n\n" +
     recapBlock +
     "何も持ってこなくて大丈夫です。\n" +
     "当日、画面の向こうでお会いできたら嬉しいです。\n\n" +
@@ -133,206 +157,212 @@ function applyReplyBody(cfg, d) {
     signature_();
 }
 
-/** リマインドの件名・本文（which = "dayBefore" | "sameDay"）*/
-function reminderSubject_(which) {
-  return which === "sameDay"
-    ? "このあと20時からです｜「応援の循環」キックオフセミナー（Google Meetリンク）"
-    : "明日20時です｜「応援の循環」キックオフセミナーのご案内";
+function reminderSubject_(key) {
+  return {
+    d3: "あと3日｜10月2日（金）20時から「応援の循環」キックオフセミナー",
+    d2: "あと2日｜「応援の循環」キックオフセミナー",
+    d1: "明日20時です｜「応援の循環」キックオフセミナーのご案内",
+    m:  "今夜20時からです｜「応援の循環」キックオフセミナー（Google Meetリンク）",
+    h1: "あと1時間です｜「応援の循環」キックオフセミナー（Google Meetリンク）",
+    s:  "始まりました｜「応援の循環」キックオフセミナー（Google Meetリンク）"
+  }[key];
 }
-function reminderBody_(name, which) {
-  if (which === "sameDay") {
-    return name + " 様\n\n" +
-      "IOBオーガニックスクール事務局です。\n\n" +
-      "「応援の循環」キックオフセミナーは、このあと20:00からです（日本時間・22:00ごろまで）。\n\n" +
-      "▼参加用リンク（Google Meet）\n" +
-      MEET + "\n\n" +
-      "何も持ってこなくて大丈夫です。カメラは切ったままでも、聞いているだけでも。\n" +
-      "のちほど、画面の向こうでお会いしましょう。\n\n" +
-      signature_();
-  }
-  return name + " 様\n\n" +
-    "IOBオーガニックスクール事務局です。\n\n" +
-    "「応援の循環」キックオフセミナーは、明日10月2日（金）20:00からです（日本時間・22:00ごろまで）。\n\n" +
-    "▼参加用リンク（Google Meet）\n" +
-    MEET + "\n\n" +
-    "時間になったら、このリンクを開いてください。\n" +
-    "カメラは切ったままでも、聞いているだけでも大丈夫です。\n\n" +
-    "明日は、高田洋平さんと一緒に「応援が巡る関係」を実際にワークしながら体験します。\n" +
-    "明日の夜、画面の向こうでお会いできたら嬉しいです。\n\n" +
-    signature_();
+function reminderBody_(name, key) {
+  var head = name + " 様\n\nIOBオーガニックスクール事務局です。\n\n";
+  var link = "▼参加用リンク（Google Meet）\n" + MEET + "\n\n";
+  var tail = signature_();
+  var b = {
+    d3: "「応援の循環」キックオフセミナーまで、あと3日になりました。\n\n■ 日時\n" + WHEN + "\n\n" + link +
+        "当日は、高田洋平さんと一緒に「応援が巡る関係」を実際にワークしながら体験します。\nカメラは切ったままでも、聞いているだけでも大丈夫です。\n\n",
+    d2: "「応援の循環」キックオフセミナーまで、あと2日です。\n\n" +
+        "当日のはじめに、「これまでに誰かに応援してもらったこと、誰かを応援したこと」を思い出す時間があります。\n" +
+        "いまのうちに、ぼんやり思い浮かべておいてください。書き留めておく必要はありません。\n\n■ 日時\n" + WHEN + "\n\n" + link,
+    d1: "「応援の循環」キックオフセミナーは、明日10月2日（金）20:00からです（日本時間・22:00ごろまで）。\n\n" + link +
+        "時間になったら、このリンクを開いてください。\n何も持ってこなくて大丈夫です。\n\n明日の夜、画面の向こうでお会いできたら嬉しいです。\n\n",
+    m:  "今夜、「応援の循環」キックオフセミナーです。\n\n■ 日時\n本日 " + WHEN.replace("10月2日（金）", "") + "\n\n" + link +
+        "何も持ってこなくて大丈夫です。カメラは切ったままでも、聞いているだけでも。\n\n",
+    h1: "「応援の循環」キックオフセミナーは、あと1時間、20:00からです。\n\n" + link +
+        "時間になったら、このリンクを開いてください。\n\n",
+    s:  "「応援の循環」キックオフセミナーが、いま始まりました。\n\n" + link + "こちらのリンクから入室してください。\n\n"
+  }[key];
+  return head + b + tail;
 }
 
-/** LPからの申込：シート追記 → 事務局へ通知 → 申込者へ自動返信 */
+/* ============ 申込受付 ============ */
 function applyEvent_(ss, cfg, d) {
   var sheet = eventSheet_(ss, cfg);
   var ts = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
-  var row = cfg.hasBand
-    ? [ts, d.name || "", d.email || "", d.bandStatus || "", d.question || "", "", "", "", ""]
-    : [ts, d.name || "", d.email || "", d.question || "", "", "", "", ""];
-  sheet.appendRow(row);
+  var vals = cfg.hasBand
+    ? [ts, d.name || "", d.email || "", d.bandStatus || "", d.question || "", "", ""]
+    : [ts, d.name || "", d.email || "", d.question || "", "", ""];
+  for (var i = 0; i < REMINDERS.length; i++) vals.push("");
+  sheet.appendRow(vals);
   var rowNum = sheet.getLastRow();
-  var notifyCol = cfg.hasBand ? 6 : 5;
-  var replyCol = cfg.hasBand ? 7 : 6;
+  var notifyCol = cfg.base.length - 1, replyCol = cfg.base.length;
   var notifyStatus = "", replyStatus = "";
 
-  if (CONFIG.NOTIFY_TO) {
-    try {
-      MailApp.sendEmail({
-        to: CONFIG.NOTIFY_TO,
-        subject: "【応援の循環キックオフ申込】" + d.name + " 様" + (cfg.hasBand ? "" : "（一般）"),
-        body: "「応援の循環」キックオフセミナーの申込が入りました。\n\n" +
-          "お名前：" + d.name + "\n" +
-          "メール：" + d.email + "\n" +
-          (cfg.hasBand ? "BAND参加状況：" + (d.bandStatus || "") + "\n" : "") +
-          "高田さんへの質問：" + (d.question || "（なし）") + "\n" +
-          "日時：" + ts
-      });
-      notifyStatus = "通知OK " + ts;
-    } catch (e1) {
-      notifyStatus = "通知ERR: " + e1;
-    }
-    sheet.getRange(rowNum, notifyCol).setValue(notifyStatus);
-  }
+  try {
+    MailApp.sendEmail({
+      to: CONFIG.NOTIFY_TO,
+      subject: "【応援の循環キックオフ申込】" + d.name + " 様" + (cfg.hasBand ? "" : "（一般）"),
+      body: "「応援の循環」キックオフセミナーの申込が入りました。\n\n" +
+        "お名前：" + d.name + "\nメール：" + d.email + "\n" +
+        (cfg.hasBand ? "BAND参加状況：" + (d.bandStatus || "") + "\n" : "") +
+        "高田さんへの質問：" + (d.question || "（なし）") + "\n日時：" + ts
+    });
+    notifyStatus = "通知OK " + ts;
+  } catch (e1) { notifyStatus = "通知ERR: " + e1; }
+  sheet.getRange(rowNum, notifyCol).setValue(notifyStatus);
 
   if (d.email) {
     try {
-      var opts = mailOpts_();
-      GmailApp.sendEmail(d.email, "【お申し込みありがとうございます】「応援の循環」キックオフセミナーのご案内（Google Meetリンク）", applyReplyBody(cfg, d), opts);
-      replyStatus = "返信OK " + ts;
-    } catch (e2) {
-      replyStatus = "返信ERR: " + e2;
-    }
+      var via = sendMail_(d.email, "【お申し込みありがとうございます】「応援の循環」キックオフセミナーのご案内（Google Meetリンク）", applyReplyBody(cfg, d));
+      replyStatus = "返信OK " + ts + "（" + via + "）";
+    } catch (e2) { replyStatus = "返信ERR: " + e2; }
     sheet.getRange(rowNum, replyCol).setValue(replyStatus);
   }
   return { result: "ok" };
 }
 
-/** POST・GETどちらで来ても同じ処理に流す（302リダイレクト対策） */
 function doPost(e) { return handle(e); }
 function doGet(e)  { return handle(e); }
 
 function handle(e) {
   try {
-    // 保守用GET（個人情報は返さない）
     if (e && e.parameter && e.parameter.action) {
-      return ContentService.createTextOutput(JSON.stringify(admin_(e.parameter)))
-        .setMimeType(ContentService.MimeType.JSON);
+      return ContentService.createTextOutput(JSON.stringify(admin_(e.parameter))).setMimeType(ContentService.MimeType.JSON);
     }
-
-    // POSTボディ・GETパラメータの両対応
-    // 🚨 e.parameter.payload を先に見ること。
-    // LP側は Content-Type: application/x-www-form-urlencoded で送るため、
-    // その場合 e.postData.contents は "payload=%7B...%7D" という生の文字列になり、
-    // 先に読むと JSON.parse が必ず失敗して申込が保存されない。
+    // 🚨 e.parameter.payload を先に見ること（form-urlencoded送信では postData.contents が生文字列になるため）
     var raw = "";
-    if (e && e.parameter && e.parameter.payload) {
-      raw = e.parameter.payload;
-    } else if (e && e.postData && e.postData.contents) {
-      raw = e.postData.contents;
-    }
-    if (!raw) {
-      return ContentService.createTextOutput(JSON.stringify({ result: "no-data" }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
+    if (e && e.parameter && e.parameter.payload) raw = e.parameter.payload;
+    else if (e && e.postData && e.postData.contents) raw = e.postData.contents;
+    if (!raw) return ContentService.createTextOutput(JSON.stringify({ result: "no-data" })).setMimeType(ContentService.MimeType.JSON);
 
     const d = JSON.parse(raw);
     const cfg = EVENTS[d.type];
-    if (!cfg) {
-      return ContentService.createTextOutput(JSON.stringify({ result: "unknown-type" }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    return ContentService.createTextOutput(JSON.stringify(applyEvent_(ss, cfg, d)))
-      .setMimeType(ContentService.MimeType.JSON);
-
+    if (!cfg) return ContentService.createTextOutput(JSON.stringify({ result: "unknown-type" })).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify(applyEvent_(SpreadsheetApp.getActiveSpreadsheet(), cfg, d))).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ result: "error", message: String(err) }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({ result: "error", message: String(err) })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-/** トリガーから呼ぶ2本（引数なし）。既存生向け・一般向け両方のシートに送る */
-function sendReminderDayBefore() { return sendReminderAll_("dayBefore", false); }
-function sendReminderSameDay()   { return sendReminderAll_("sameDay", false); }
+/* ============ リマインド ============ */
+function sendReminderD3() { return sendReminderAll_("d3", false); }
+function sendReminderD2() { return sendReminderAll_("d2", false); }
+function sendReminderD1() { return sendReminderAll_("d1", false); }
+function sendReminderM()  { return sendReminderAll_("m", false); }
+function sendReminderH1() { return sendReminderAll_("h1", false); }
+function sendReminderS()  { return sendReminderAll_("s", false); }
 
-function sendReminderAll_(which, testOnly) {
+function sendReminderAll_(key, testOnly) {
   var results = {};
-  for (var type in EVENTS) {
-    results[type] = sendReminder_(EVENTS[type], which, testOnly);
-  }
+  for (var type in EVENTS) results[type] = sendReminder_(EVENTS[type], key, testOnly);
   return results;
 }
 
-/** リマインド送信本体。testOnly=true ならテスト行（TEST_NAME＋TEST_EMAIL）だけに送る */
-function sendReminder_(cfg, which, testOnly) {
+/** testOnly=true ならテスト行（TEST_NAME＋TEST_EMAIL）だけに送る */
+function sendReminder_(cfg, key, testOnly) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = eventSheet_(ss, cfg);
-  var col = (which === "sameDay") ? cfg.colSameDay : cfg.colDayBefore;
+  var col = reminderCol_(cfg, key);
+  if (!col) return { result: "unknown-key" };
+  var width = headersOf_(cfg).length;
   var lastRow = sheet.getLastRow();
   var pending = [], seen = {}, skippedSent = 0, skippedDup = 0;
   for (var r = 2; r <= lastRow; r++) {
-    var v = sheet.getRange(r, 1, 1, cfg.headers.length).getValues()[0];
+    var v = sheet.getRange(r, 1, 1, width).getValues()[0];
     var name = String(v[1] || ""), email = String(v[2] || "").trim();
     if (!email) continue;
     var isTest = (name === TEST_NAME && email === TEST_EMAIL);
     if (testOnly && !isTest) continue;
-    if (!testOnly && isTest) continue;                      // 本番ではテスト行に送らない
-    if (String(v[col - 1]).indexOf("送信OK") === 0) { skippedSent++; continue; }   // ② 送信済みは飛ばす
+    if (!testOnly && isTest) continue;
+    if (String(v[col - 1]).indexOf("送信OK") === 0) { skippedSent++; continue; }
     var k = email.toLowerCase();
-    if (seen[k]) { sheet.getRange(r, col).setValue("重複（同じ宛先に送信済み） " + Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm")); skippedDup++; continue; }
+    if (seen[k]) { sheet.getRange(r, col).setValue("重複（同じ宛先に送信済み）"); skippedDup++; continue; }
     seen[k] = true;
     pending.push({ row: r, name: name, email: email });
   }
 
-  // ① 残数確認
-  var remaining = MailApp.getRemainingDailyQuota();
+  var brevo = brevoOn_();
+  var remaining = brevo ? 300 : MailApp.getRemainingDailyQuota();
   if (pending.length > remaining) {
-    console.error("応援の循環リマインド中止：送信枠不足 sheet=" + cfg.sheet + " pending=" + pending.length + " remaining=" + remaining);
-    return { result: "abort", reason: "送信枠が足りないので送らなかった", which: which, pending: pending.length, remaining: remaining };
+    console.error("リマインド中止：送信枠不足 sheet=" + cfg.sheet + " pending=" + pending.length + " remaining=" + remaining);
+    return { result: "abort", reason: "送信枠が足りないので送らなかった", key: key, pending: pending.length, remaining: remaining, brevo: brevo };
   }
 
-  var sent = 0, failed = 0;
-  var subject = reminderSubject_(which);
-  var opts = mailOpts_();
+  var sent = 0, failed = 0, subject = reminderSubject_(key);
   for (var i = 0; i < pending.length; i++) {
     var p = pending[i];
     try {
-      GmailApp.sendEmail(p.email, subject, reminderBody_(p.name, which), opts);
-      sheet.getRange(p.row, col).setValue("送信OK " + Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss"));
+      var via = sendMail_(p.email, subject, reminderBody_(p.name, key));
+      sheet.getRange(p.row, col).setValue("送信OK " + Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss") + "（" + via + "）");
       sent++;
     } catch (err) {
       sheet.getRange(p.row, col).setValue("送信ERR: " + err);
       failed++;
-      console.error("応援の循環リマインド打ち切り sheet=" + cfg.sheet + " row=" + p.row + " " + err);
-      break;                                                 // ③ 例外が出たらその回は打ち切る（次回実行で未送信だけ送る）
+      console.error("リマインド打ち切り sheet=" + cfg.sheet + " row=" + p.row + " " + err);
+      break;
     }
   }
-  return { result: "ok", which: which, testOnly: !!testOnly, sent: sent, failed: failed, skippedSent: skippedSent, skippedDup: skippedDup, remainingBefore: remaining };
+  return { result: "ok", key: key, testOnly: !!testOnly, sent: sent, failed: failed, skippedSent: skippedSent, skippedDup: skippedDup, remainingBefore: remaining, brevo: brevo };
 }
 
-/** 保守用GET（個人情報は返さない）。type で既存生向け・一般向けを切り替える（省略時は既存生向け） */
+/** 6つの時間トリガーを作る（旧2本・同名は削除して作り直す＝重複しない） */
+function setupTriggers() {
+  var handlers = { d3: "sendReminderD3", d2: "sendReminderD2", d1: "sendReminderD1", m: "sendReminderM", h1: "sendReminderH1", s: "sendReminderS" };
+  var targets = Object.keys(handlers).map(function (k) { return handlers[k]; }).concat(["sendReminderDayBefore", "sendReminderSameDay"]);
+  var removed = 0;
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (targets.indexOf(t.getHandlerFunction()) !== -1) { ScriptApp.deleteTrigger(t); removed++; }
+  });
+  var created = [];
+  REMINDERS.forEach(function (r) {
+    ScriptApp.newTrigger(handlers[r.key]).timeBased().at(new Date(r.at)).create();
+    created.push(handlers[r.key] + " " + r.at);
+  });
+  return { result: "ok", removedOld: removed, created: created };
+}
+
+/** 「Flodesk除外用」タブ：両タブの申込者メールアドレスを1列にまとめる（CSVでダウンロード→Flodeskの申込済みセグメントへ取り込み） */
+function setupExportTab() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var tab = ss.getSheetByName("Flodesk除外用") || ss.insertSheet("Flodesk除外用");
+  tab.clear();
+  tab.getRange("A1").setValue("email");
+  var a = "'" + EVENTS["応援の循環キックオフ"].sheet + "'!C2:C";
+  var b = "'" + EVENTS["応援の循環キックオフ_一般"].sheet + "'!C2:C";
+  tab.getRange("A2").setFormula('=IFERROR(QUERY({' + a + ';' + b + '},"select * where Col1 <> \'\'",0),"")');
+  tab.getRange("C1").setValue("使い方：ファイル→ダウンロード→CSV（このタブが開いている状態で）。Flodeskの「応援の循環_申込済み」セグメントに取り込み、告知の配信で「除外」に指定する。新しい申込が入るたびに、この一覧も自動で増える。");
+  return { result: "ok", tab: "Flodesk除外用" };
+}
+
+/* ============ 保守用GET（個人情報は返さない） ============ */
 function admin_(p) {
+  var action = String(p.action || "");
+  if (action === "setupTriggers") { if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" }; return setupTriggers(); }
+  if (action === "setupExportTab") { if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" }; return setupExportTab(); }
   var cfg = EVENTS[p.type] || EVENTS["応援の循環キックオフ"];
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = eventSheet_(ss, cfg);
   var lastRow = sheet.getLastRow();
-  var action = String(p.action || "");
-  var notifyCol = cfg.hasBand ? 6 : 5;
+  var width = headersOf_(cfg).length;
   if (action === "inspect") {
-    var last = null;
+    var last = null, sent = {};
+    REMINDERS.forEach(function (r) { sent[r.key] = 0; });
+    var tests = 0;
     if (lastRow >= 2) {
-      var st = sheet.getRange(lastRow, notifyCol, 1, 4).getValues()[0];
-      last = { notify: String(st[0]).slice(0, 40), reply: String(st[1]).slice(0, 40), dayBefore: String(st[2]).slice(0, 40), sameDay: String(st[3]).slice(0, 40) };
+      var st = sheet.getRange(lastRow, cfg.base.length - 1, 1, 2 + REMINDERS.length).getValues()[0];
+      last = { notify: String(st[0]).slice(0, 40), reply: String(st[1]).slice(0, 40) };
     }
-    var cnt = { sentDayBefore: 0, sentSameDay: 0, tests: 0 };
     for (var r = 2; r <= lastRow; r++) {
-      var v = sheet.getRange(r, 1, 1, cfg.headers.length).getValues()[0];
-      if (String(v[1]) === TEST_NAME && String(v[2]) === TEST_EMAIL) cnt.tests++;
-      if (String(v[cfg.colDayBefore - 1]).indexOf("送信OK") === 0) cnt.sentDayBefore++;
-      if (String(v[cfg.colSameDay - 1]).indexOf("送信OK") === 0) cnt.sentSameDay++;
+      var v = sheet.getRange(r, 1, 1, width).getValues()[0];
+      if (String(v[1]) === TEST_NAME && String(v[2]) === TEST_EMAIL) tests++;
+      REMINDERS.forEach(function (rm) { if (String(v[reminderCol_(cfg, rm.key) - 1]).indexOf("送信OK") === 0) sent[rm.key]++; });
     }
-    return { sheet: cfg.sheet, dataRows: Math.max(lastRow - 1, 0), headers: sheet.getRange(1, 1, 1, cfg.headers.length).getValues()[0],
-             tz: Session.getScriptTimeZone(), remaining: MailApp.getRemainingDailyQuota(), counts: cnt, lastRowStatus: last };
+    return { sheet: cfg.sheet, dataRows: Math.max(lastRow - 1, 0), headers: sheet.getRange(1, 1, 1, width).getValues()[0],
+             tz: Session.getScriptTimeZone(), gmailRemaining: MailApp.getRemainingDailyQuota(), brevo: brevoOn_(),
+             triggers: ScriptApp.getProjectTriggers().length, sent: sent, tests: tests, lastRowStatus: last };
   }
   if (action === "clearTest") {
     var removed = 0;
@@ -344,36 +374,7 @@ function admin_(p) {
   }
   if (action === "remind") {
     if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" };
-    var which = (p.which === "sameDay") ? "sameDay" : "dayBefore";
-    return sendReminder_(cfg, which, String(p.test || "") === "1");
-  }
-  if (action === "setupTriggers") {
-    if (String(p.key || "") !== ADMIN_KEY) return { result: "denied" };
-    return setupTriggers();
+    return sendReminder_(cfg, String(p.which || ""), String(p.test || "") === "1");
   }
   return { result: "unknown-action" };
-}
-
-/** 前日10/1(木)20:00・当日10/2(金)17:00(日本時間)の時間主導型トリガーを作成する。
- *  同名トリガーが既にあれば一旦削除してから作り直す(重複実行防止)。
- *  実行方法：Apps Scriptエディタで関数選択→setupTriggers→実行、
- *  または ?action=setupTriggers&key=(ADMIN_KEY) をGETで叩く */
-function setupTriggers() {
-  var targets = ["sendReminderDayBefore", "sendReminderSameDay"];
-  var removed = 0;
-  ScriptApp.getProjectTriggers().forEach(function (t) {
-    if (targets.indexOf(t.getHandlerFunction()) !== -1) {
-      ScriptApp.deleteTrigger(t);
-      removed++;
-    }
-  });
-  ScriptApp.newTrigger("sendReminderDayBefore")
-    .timeBased()
-    .at(new Date("2026-10-01T20:00:00+09:00"))
-    .create();
-  ScriptApp.newTrigger("sendReminderSameDay")
-    .timeBased()
-    .at(new Date("2026-10-02T17:00:00+09:00"))
-    .create();
-  return { result: "ok", removedOld: removed, created: targets };
 }
