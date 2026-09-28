@@ -135,6 +135,14 @@ function flodeskAdd_(email, name, testSegment) {
   var code = res.getResponseCode();
   return (code >= 200 && code < 300) ? "追加OK " + segIds.length + "件" : "ERR HTTP " + code;
 }
+/** エディタから実行：Flodeskへの接続確認（権限の承認も兼ねる）。作成済みセグメントの有無だけを表示する */
+function checkFlodesk() {
+  if (!flodeskKey_()) { Logger.log("FLODESK_API_KEY が未登録です"); return; }
+  CacheService.getScriptCache().remove("segids");
+  var ids = segmentIds_(), names = REMINDERS.map(function (r, i) { return segName_(i); }).concat([FLODESK_TEST_SEGMENT]);
+  names.forEach(function (n) { Logger.log(n + "：" + (ids[n] ? "あり" : "まだ作成されていません")); });
+  Logger.log("接続OK");
+}
 /** 既存の申込者を一括でセグメントへ追加（件数だけ返す。氏名・メールは返さない） */
 function backfillFlodesk_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet(), out = { added: 0, failed: 0, skipped: 0, noKey: !flodeskKey_() };
