@@ -7,7 +7,7 @@
 <title>「応援の循環」キックオフセミナー｜Institut für Organic Business</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --point:#f26b3b;
@@ -30,30 +30,67 @@
   .wrap{max-width:680px;margin:0 auto;padding:0 20px;}
   h1,h2,h3,.mincho{font-family:"Zen Old Mincho",serif;}
 
-  /* ===== ヒーロー ===== */
-  .hero{
-    position:relative;
-    background:linear-gradient(160deg,#3d2418 0%,#553727 46%,#7a4a2e 100%);
-    padding:70px 0 46px;
-    overflow:hidden;
-  }
-  .hero .wrap{position:relative;z-index:1;}
-  .hero .eyebrow{
-    color:#f2e4d6;font-size:13px;letter-spacing:.08em;margin-bottom:16px;font-weight:500;
-  }
-  .hero h1{
-    font-size:25px;font-weight:700;line-height:1.7;margin-bottom:18px;color:#fff;
-  }
-  .hero .lead{
-    font-size:15px;color:#f4e9dd;line-height:1.9;
-  }
-  .hero .logo{display:block;margin-top:26px;width:170px;max-width:52%;height:auto;
-    filter:brightness(0) invert(1);opacity:.92;}
+  /* ===== ヒーロー（同窓会LPの型） ===== */
+  .hero{text-align:center;padding:48px 0 34px;
+    background:radial-gradient(120% 90% at 50% -10%,#fff7ee 0%,var(--bg) 60%);overflow:hidden;}
+  .hero .wrap{max-width:980px;}
+  .hero .pill{display:inline-block;font-family:"Zen Maru Gothic",sans-serif;font-weight:700;
+    font-size:14px;letter-spacing:.06em;color:#fff;background:var(--point);
+    padding:.45em 1.3em;border-radius:999px;box-shadow:0 8px 22px rgba(242,107,59,.35);transform:rotate(-1.5deg);}
+  .hero .sub{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:16px;color:var(--second);
+    letter-spacing:.06em;margin:14px 0 0;transform:rotate(-1deg);}
+  .hero h1{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(2.2rem,8.6vw,4.4rem);
+    line-height:1.2;color:var(--ink);margin:.25em 0 .2em;letter-spacing:.01em;}
+  .hero h1 .pop{color:var(--point);position:relative;white-space:nowrap;}
+  .hero h1 .pop::after{content:"";position:absolute;left:-4%;right:-4%;bottom:.08em;height:.28em;
+    background:rgba(0,133,201,.22);border-radius:99px;z-index:-1;}
+  .hero .lede{font-family:"Zen Maru Gothic",sans-serif;font-weight:500;font-size:clamp(1rem,3.4vw,1.25rem);
+    color:var(--sub);line-height:1.8;}
+  .mosaic{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:26px auto 0;max-width:900px;position:relative;}
+  .mosaic figure{border-radius:14px;overflow:hidden;border:4px solid #fff;box-shadow:0 12px 28px rgba(85,55,39,.16);}
+  .mosaic img{width:100%;height:100%;object-fit:cover;display:block;}
+  .mosaic .m1{grid-column:span 6;aspect-ratio:16/9;}
+  .mosaic .m2,.mosaic .m3,.mosaic .m4{grid-column:span 2;aspect-ratio:1/1;}
+  .mosaic .m5,.mosaic .m6{grid-column:span 3;aspect-ratio:3/2;}
+  .mosaic .m1 img{object-position:center 62%;}
+  .mosaic .tag{position:absolute;left:14px;top:14px;background:rgba(255,255,255,.94);color:var(--ink);
+    font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:13px;padding:.4em 1em;border-radius:99px;
+    box-shadow:0 4px 12px rgba(85,55,39,.16);}
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px auto 0;max-width:900px;}
+  .fact{background:var(--white);border-radius:16px;padding:16px 8px;box-shadow:0 10px 26px rgba(85,55,39,.12);border:2px solid #fff;}
+  .fact .k{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:11px;color:var(--second);letter-spacing:.08em;}
+  .fact .v{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:clamp(1rem,3.6vw,1.3rem);color:var(--ink);line-height:1.4;margin-top:2px;}
+  .fact .s{font-size:11px;color:var(--sub);line-height:1.5;}
+  .fact.free .v{color:var(--point);}
+  .hero .logo{display:block;margin:22px auto 0;width:150px;height:auto;}
+  .hero .kicker{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:clamp(.95rem,3.4vw,1.15rem);color:var(--sub);margin-top:18px;line-height:1.7;}
+  .statement{font-family:"Zen Old Mincho",serif;font-weight:900;color:var(--point);
+    font-size:clamp(1.15rem,5.2vw,2rem);line-height:1.5;margin:10px 0 6px;letter-spacing:0;}
+  .nw{white-space:nowrap;}
+  .statement-band{background:var(--point);color:#fff;text-align:center;padding:30px 20px;}
+  .statement-band p{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(1.1rem,5vw,2rem);line-height:1.6;margin:0;}
+  .statement-band small{display:block;font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:14px;opacity:.92;margin-top:6px;}
+  .photo-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0 4px;}
+  .photo-pair figure,.photo-one{border-radius:14px;overflow:hidden;border:4px solid #fff;box-shadow:0 12px 28px rgba(85,55,39,.16);position:relative;}
+  .photo-pair figure{aspect-ratio:4/3;}
+  .photo-one{aspect-ratio:16/9;margin:24px 0 4px;}
+  .photo-pair img,.photo-one img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-pair .cap,.photo-one .cap{position:absolute;left:8px;bottom:8px;background:rgba(242,107,59,.94);color:#fff;
+    font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:11px;padding:.25em .8em;border-radius:99px;}
+  .hero-cta{display:inline-block;margin-top:22px;background:var(--point);color:#fff;text-decoration:none;font-weight:700;
+    font-size:17px;padding:16px 34px;border-radius:999px;box-shadow:0 10px 24px rgba(242,107,59,.35);}
+  .hero-cta small{display:block;font-size:12px;font-weight:500;opacity:.92;}
+  .final-call{text-align:center;}
+  .final-call p{margin-bottom:16px;}
+  .final-call .big{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(1.25rem,5.4vw,1.7rem);color:var(--point);line-height:1.6;}
+  .q-list{list-style:none;margin:18px 0;padding:0;}
+  .q-list li{background:var(--white);border:1px solid var(--line);border-left:5px solid var(--second);border-radius:10px;padding:12px 16px;margin-bottom:10px;font-weight:700;line-height:1.7;}
   @media(max-width:480px){
-    .hero{padding:52px 0 38px;}
-    .hero h1{font-size:21px;line-height:1.75;}
-    .hero .lead{font-size:14.5px;}
-    .hero .logo{width:150px;margin-top:22px;}
+    .hero{padding:38px 0 28px;}
+    .hero .pill{font-size:12.5px;}
+    .hero .sub{font-size:14px;}
+    .mosaic{gap:6px;}
+    .mosaic .tag{font-size:11.5px;left:10px;top:10px;}
     section{padding:32px 0;}
   }
 
@@ -196,16 +233,29 @@ window.IOB_PHASE = (function(){
 <!-- ============ ① FV ============ -->
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">つくる人も、届ける人も、選ぶ人も。</div>
-    <h1>オーガニックを想う人たちが、<br>もっとつながり、応援し合えたら。</h1>
+    <span class="pill">🌱 オーガニックを想う、すべての人へ</span>
+    <p class="kicker">1924年。オーガニックの大きな流れも、<br>最初は小さな集まりから始まりました。</p>
     <div data-phase="open">
-      <div class="lead">「応援」をきっかけに、人と人の間に新しいつながりをつくる2時間。<br>応援共創プロデューサー・高田洋平さんと一緒に、その最初の一歩を始めます。</div>
-      <div class="lead" style="margin-top:14px;">2026年10月2日（金）20:00〜22:00<br>オンライン（Google Meet）｜参加費無料</div>
+      <h1>違うまま、<br><span class="pop">つながろう。</span></h1>
+      <p class="statement"><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p>
+      <p class="lede">つくる人も、届ける人も、選ぶ人も。<br>やり方は違っても、<br>目指す未来は重なっている。<br>だから10月2日の夜、まずは集まって、<br>「これから何を一緒にできるだろう？」<br>を考えるところから始めます。</p>
     </div>
     <div data-phase="close">
-      <div class="lead">2026年10月2日（金）に開催しました。<br>ご参加ありがとうございました。</div>
+      <h1>違うまま、<br><span class="pop">つながった。</span></h1>
+      <p class="statement"><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p>
+      <p class="lede">2026年10月2日（金）に開催しました。<br>ご参加ありがとうございました。</p>
     </div>
-    <img class="logo" src="iob-logo-orange.png" alt="Institut für Organic Business" width="170">
+    <div class="mosaic">
+      <figure class="m1"><img src="img/nakama/hero-group.jpg" alt="北海道の大地に大勢で集まった人たち"></figure>
+      <span class="tag">📸 一人で早く行くより、みんなで遠くへ。</span>
+    </div>
+    <div class="facts" data-phase="open">
+      <div class="fact"><div class="k">DATE</div><div class="v">10.2<span style="font-size:.7em">(金)</span></div><div class="s">2026年</div></div>
+      <div class="fact"><div class="k">TIME</div><div class="v">20:00–22:00</div><div class="s">日本時間</div></div>
+      <div class="fact free"><div class="k">JOIN</div><div class="v">無料</div><div class="s">オンライン<br>（Google Meet）</div></div>
+    </div>
+    <div data-phase="open"><a class="hero-cta" href="#applyForm">明日の場に参加する<small>参加無料・どなたでも参加できます／申込は20:00まで</small></a></div>
+    <img class="logo" src="iob-logo-orange.png" alt="Institut für Organic Business" width="150">
   </div>
 </header>
 
@@ -226,20 +276,41 @@ window.IOB_PHASE = (function(){
 <!-- ============ ③ はじめに ============ -->
 <section class="alt">
   <div class="wrap">
-    <div class="sec-eyebrow">なぜ、この2時間を開くのか</div>
-    <h2 class="sec-title">「応援したい」だけでは、応援は循環しない</h2>
-    <p>誰かの一歩に気づく。声をかける。自分のことも知ってもらう。必要な時には、誰かの力を借りる。</p>
-    <p>では、そんな関係はどうしたら自然に生まれるのでしょうか。</p>
-    <p>この問いは、IOB（Institut für Organic Business）で学ぶ仲間たちの間で、2026年9月の同窓会をきっかけに生まれました。そこで生まれた「応援の循環」を、IOBの中だけで終わらせず、オーガニックをつくる人、届ける人、選ぶ人へと広げていきたいと思っています。</p>
-    <p>10月2日は、そのヒントを「聞いて終わり」ではなく、<span class="hl">みんなで実際にやってみる2時間</span>です。</p>
+    <div class="sec-eyebrow">なぜ、この夜を開くのか</div>
+    <h2 class="sec-title">同じ未来を願っているのに、<br>なぜ、応援し合うのはむずかしいんだろう。</h2>
+    <p>自然農、有機農業、パーマカルチャー、アグロフォレストリー。オーガニック、ヴィーガン、サステナブル、エシカル。</p>
+    <p>やり方は違っても、土と人と、次の世代の未来を大切にしたい気持ちは、きっと同じはずです。それなのに、方法や立場が違うだけで距離ができたり、お互いを応援しにくくなったりする。オーガニックの世界に長くいて、そんな場面を何度も見てきました。</p>
+    <h3 class="mincho" style="font-size:19px;margin:30px 0 12px;color:var(--ink);">小さな声のままでは、社会は動かない</h3>
+    <p>私が暮らすドイツには、こんな歴史があります。1970〜80年代、環境保護、脱原発、反戦、女性の権利向上、有機農業の推進など、それぞれのテーマを掲げるさまざまな運動や取り組みがありました。目指すものも、考え方も、すべて同じではありませんでした。</p>
+    <p>それでも、別々に動いていた運動の一部がつながり、1980年に「緑の党」という一つの場をつくります。3年後には、連邦議会（日本でいう国会）に議席を得ました。</p>
+    <p>私が惹かれるのは、政党への賛否ではありません。<span class="hl">一つひとつの声だけでは届かないから、違いを残したまま、つながった。</span>その選択です。</p>
+    <p>日本にも、近い未来を願って活動している人や団体はたくさんあります。でも、違いを越えて力を合わせることには、まだ大きな余地がある。まだ、その一歩を踏み出せていないだけだと思うんです。</p>
+    <div class="photo-pair">
+      <figure><img src="img/nakama/wheat.jpg" alt="北海道の麦畑で並んで笑う人たち" loading="lazy"><span class="cap">北海道の麦畑で</span></figure>
+      <figure><img src="img/nakama/balcony.jpg" alt="ドイツのビオホテルのバルコニーに集う人たち" loading="lazy"><span class="cap">ドイツのビオホテルで</span></figure>
+    </div>
+    <h3 class="mincho" style="font-size:19px;margin:30px 0 12px;color:var(--ink);">100年前も、最初は小さな集まりだった</h3>
+    <p>1924年、当時ドイツ領だったコーベルヴィッツ（現在のポーランド）で、ルドルフ・シュタイナーが「農業講座」を開きました。ヨーロッパ各地から、農業者を含む人たちが集まった小さな集まりです。この講座は、のちのバイオダイナミック農法、そしてオーガニック農業の歴史につながる原点の一つとされています。</p>
+    <p>大きな流れも、最初は誰かと誰かが集まって「ここから始めよう」と思うところから生まれる。</p>
+    <p>私の役目は、その旗を立てて「ここに集まりませんか」と呼びかけることです。<span class="hl">主役は、集まってくださる一人ひとり。</span>10月2日の夜は、「オーガニックが、あたりまえ。」な社会をみんなでつくっていく、その最初の場面です。</p>
+    <p style="margin-top:26px;">この夜に、ひとつの正解を出すことが目的ではありません。持ち帰ってほしいのは、「自分一人で何ができるか」だけではなく、<span class="hl">「この人たちとなら、何ができるだろう」という新しい問い</span>です。</p>
+    <div class="sec-eyebrow" style="margin-top:22px;">その入口として、みんなで考える3つの問い</div>
+    <ul class="q-list">
+      <li>応援したいのに、何をしたらいいかわからないのはなぜか</li>
+      <li>応援されると「お返ししなきゃ」と重くなるのはなぜか</li>
+      <li>違いを抱えたまま、一緒に歩くには、何が必要なのか</li>
+    </ul>
   </div>
 </section>
+
+<div class="statement-band"><p><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p><small>その最初の一歩を、ここから一緒に。</small></div>
 
 <!-- ============ ④ ゲスト紹介 ============ -->
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">ゲスト</div>
     <h2 class="sec-title">高田洋平さん</h2>
+    <p>違う立場の人たちが、同じになることなく、応援し合える関係をどうつくるのか。その入口を一緒に考えるために、今回、高田洋平さんに来ていただきます。</p>
     <div class="profile-card">
       <img class="profile-photo" src="img/takada-profile.jpg" alt="高田洋平さん" loading="lazy">
       <div class="name">高田 洋平（たかだ ようへい）さん</div>
@@ -265,6 +336,7 @@ window.IOB_PHASE = (function(){
   <div class="wrap">
     <div class="sec-eyebrow">当日の2時間</div>
     <h2 class="sec-title">「いい話を聞いて終わり」にはしません</h2>
+    <p>前半45分は高田さんのお話。後半45分は少人数に分かれて「自分の活動や暮らしなら、どんな応援ができるだろう？」を一緒に考えます。<span class="hl">最後の30分ほどは懇親会</span>です。カメラはオフでも大丈夫です。</p>
     <ul class="timeline">
       <li>
         <div class="num">1</div>
@@ -305,26 +377,35 @@ window.IOB_PHASE = (function(){
           <p>この2時間をこの日だけで終わらせず、これからの「応援の循環」につなげます。</p>
         </div>
       </li>
+      <li>
+        <div class="num">7</div>
+        <div class="what">
+          <b>懇親会（最後の30分ほど）</b>
+          <p>参加したみなさんと、自由に話せる時間です。</p>
+        </div>
+      </li>
     </ul>
+    <div class="photo-pair">
+      <figure><img src="img/nakama/hay.jpg" alt="北海道で干し草の上でくつろぐ人たち" loading="lazy"><span class="cap">北海道で</span></figure>
+      <figure><img src="img/nakama/bavaria.jpg" alt="ドイツのビオホテルで笑顔で集まる人たち" loading="lazy"><span class="cap">ドイツのビオホテルで</span></figure>
+    </div>
   </div>
 </section>
 
-<!-- ============ ⑥ こんな方に ============ -->
+<!-- ============ ⑥ こんな方に・最後のひと押し ============ -->
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">こんな方に</div>
     <h2 class="sec-title">オーガニックに関わる、どなたでも</h2>
-    <div class="u-block">
-      <div class="label">オーガニックをつくっている</div>
-      <p>生産者として、日々の仕事の中で感じている手応えや悩みを、応援し合える関係の中で分かち合いませんか。</p>
-    </div>
-    <div class="u-block">
-      <div class="label">オーガニックを届けている</div>
-      <p>事業者・専門家として、誰かの一歩を後押しする側にいる方も、ここでは応援される側にもなれます。</p>
-    </div>
-    <div class="u-block">
-      <div class="label">オーガニックを選んでいる</div>
-      <p>消費者として選ぶ人も、つくる人・届ける人とつながる最初の一歩として、ぜひご参加ください。</p>
+    <p>つくる人も、届ける人も、選ぶ人も。生産者・事業者・専門家・市民活動をしている方・いつものお店でオーガニックを選んでいる方。どんな立場でも歓迎です。</p>
+    <div class="photo-one"><img src="img/nakama/nagano.jpg" alt="森のツリーハウス前に集まった人たち" loading="lazy"><span class="cap">長野の森で</span></div>
+    <div class="final-call" style="margin-top:26px;">
+      <p class="big"><span class="nw">「オーガニックが、あたりまえ。」</span></p>
+      <p>その未来が本当に来てほしいと思うなら、<br>明日の2時間を、そのための小さな一歩にしませんか。</p>
+      <p>大きなことを決める必要はありません。<br>誰かと同じ意見になる必要もありません。<br>まずは集まって、違うまま話してみる。</p>
+      <p>何か大きなことを始めると決めていなくても大丈夫です。<br>まだ自分に何ができるかわからなくても、<br>この未来に少しでも心が動くなら、<br>まずは一緒に考えるところから参加してください。</p>
+      <p class="big">一人で早く行くより、<br>みんなで遠くへ。</p>
+      <div data-phase="open"><a class="hero-cta" href="#applyForm">10月2日の場に参加する<small>10/2（金）20:00〜22:00・オンライン・参加無料／申込は20:00まで</small></a></div>
     </div>
   </div>
 </section>
@@ -406,7 +487,7 @@ window.IOB_PHASE = (function(){
 <!-- ============ ⑧ 最後の一言 ============ -->
 <div class="closing" data-phase="open">
   <div class="wrap">
-    <p class="mincho">応援は、ひとりでは循環しません。<br><br>10月2日、<br>その最初の一歩を一緒に踏み出しませんか。</p>
+    <p class="mincho">「オーガニックが、あたりまえ。」な社会へ。<br><br>10月2日、<br>その最初の一歩を一緒に踏み出しませんか。</p>
     <div class="actions">
       <a class="primary" href="#applyForm">申込フォームへ</a>
     </div>
