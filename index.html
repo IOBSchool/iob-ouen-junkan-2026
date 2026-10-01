@@ -63,6 +63,22 @@
   .fact .s{font-size:11px;color:var(--sub);line-height:1.5;}
   .fact.free .v{color:var(--point);}
   .hero .logo{display:block;margin:22px auto 0;width:150px;height:auto;}
+  .hero .kicker{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:clamp(.95rem,3.4vw,1.15rem);color:var(--sub);margin-top:18px;line-height:1.7;}
+  .statement{font-family:"Zen Old Mincho",serif;font-weight:900;color:var(--point);
+    font-size:clamp(1.15rem,5.2vw,2rem);line-height:1.5;margin:10px 0 6px;letter-spacing:0;}
+  .nw{white-space:nowrap;}
+  .statement-band{background:var(--point);color:#fff;text-align:center;padding:30px 20px;}
+  .statement-band p{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(1.1rem,5vw,2rem);line-height:1.6;margin:0;}
+  .statement-band small{display:block;font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:14px;opacity:.92;margin-top:6px;}
+  .photo-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0 4px;}
+  .photo-pair figure,.photo-one{border-radius:14px;overflow:hidden;border:4px solid #fff;box-shadow:0 12px 28px rgba(85,55,39,.16);position:relative;}
+  .photo-pair figure{aspect-ratio:4/3;}
+  .photo-one{aspect-ratio:16/9;margin:24px 0 4px;}
+  .photo-pair img,.photo-one img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-pair .cap,.photo-one .cap{position:absolute;left:8px;bottom:8px;background:rgba(242,107,59,.94);color:#fff;
+    font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:11px;padding:.25em .8em;border-radius:99px;}
+  .q-list{list-style:none;margin:18px 0;padding:0;}
+  .q-list li{background:var(--white);border:1px solid var(--line);border-left:5px solid var(--second);border-radius:10px;padding:12px 16px;margin-bottom:10px;font-weight:700;line-height:1.7;}
   @media(max-width:480px){
     .hero{padding:38px 0 28px;}
     .hero .pill{font-size:12.5px;}
@@ -217,24 +233,21 @@ window.IOB_PHASE = (function(){
 <!-- ============ ① FV ============ -->
 <header class="hero">
   <div class="wrap">
-    <span class="pill">🌱 IOB 専門家コース生・卒業生へ</span>
-    <p class="sub">🌿 「応援の循環」キックオフ</p>
+    <span class="pill">🌱 同じ未来を願う、すべての仲間へ</span>
+    <p class="kicker">1924年、ドイツの小さな集まりから<br>オーガニックの歩みが始まったように。</p>
     <div data-phase="open">
-      <h1>違うまま、<br><span class="pop">つながろう。</span></h1>
-      <p class="lede">やり方は違っても、願う未来は同じ。<br>違いを残したまま、一緒に進む最初の夜。</p>
+      <h1>ここから、<br><span class="pop">共創が始まる。</span></h1>
+      <p class="statement"><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p>
+      <p class="lede">違いを抱えたまま、<br>一緒に歩き出す最初の夜。</p>
     </div>
     <div data-phase="close">
-      <h1>違うまま、<br><span class="pop">つながった。</span></h1>
+      <h1>ここから、<br><span class="pop">共創が始まった。</span></h1>
+      <p class="statement"><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p>
       <p class="lede">2026年10月2日（金）に開催しました。<br>ご参加ありがとうございました。</p>
     </div>
     <div class="mosaic">
       <figure class="m1"><img src="img/nakama/hero-group.jpg" alt="北海道の大地に大勢で集まった仲間たち"></figure>
-      <span class="tag">📸 あの日の仲間と、ここからまた。</span>
-      <figure class="m2"><img src="img/nakama/wheat.jpg" alt="北海道の麦畑で並んで笑う仲間たち"></figure>
-      <figure class="m3"><img src="img/nakama/balcony.jpg" alt="ドイツのビオホテルのバルコニーに集う仲間たち"></figure>
-      <figure class="m4"><img src="img/nakama/hay.jpg" alt="北海道で干し草の上でくつろぐ仲間たち"></figure>
-      <figure class="m5"><img src="img/nakama/bavaria.jpg" alt="ドイツのビオホテルで笑顔で集まる仲間たち"></figure>
-      <figure class="m6"><img src="img/nakama/nagano.jpg" alt="森のツリーハウス前に集まった仲間たち"></figure>
+      <span class="tag">📸 一人で早く行くより、みんなで遠くへ。</span>
     </div>
     <div class="facts" data-phase="open">
       <div class="fact"><div class="k">DATE</div><div class="v">10.2<span style="font-size:.7em">(金)</span></div><div class="s">2026年</div></div>
@@ -260,7 +273,7 @@ window.IOB_PHASE = (function(){
         <tr><th>場所</th><td>オンライン（Google Meet）<small data-phase="open">お申し込み後の自動返信メールで、参加用のリンクをお送りします</small><small data-phase="close">当日はGoogle Meetで開催しました</small></td></tr>
         <tr><th>参加費</th><td>無料</td></tr>
         <tr><th>ゲスト</th><td>高田洋平さん<small>応援共創プロデューサー／「応援共創ラボBOOSTER」主宰</small></td></tr>
-        <tr><th>対象</th><td>IOB専門家コース・コスメ専門家コースのみなさん<small>同窓会に来た方も、来られなかった方も</small></td></tr>
+        <tr><th>対象</th><td>どなたでも<small>IOBの受講生・卒業生も、はじめての方も</small></td></tr>
       </table>
     </div>
   </div>
@@ -269,13 +282,37 @@ window.IOB_PHASE = (function(){
 <!-- ============ ③ はじめに ============ -->
 <section class="alt">
   <div class="wrap">
-    <div class="sec-eyebrow">なぜ、この2時間を開くのか</div>
-    <h2 class="sec-title">「応援したい」だけでは、応援は循環しない</h2>
-    <p>誰かの一歩に気づく。声をかける。自分のことも知ってもらう。必要な時には、誰かの力を借りる。</p>
-    <p>では、そんな関係はどうしたら自然に生まれるのでしょうか。</p>
-    <p>10月2日は、そのヒントを「聞いて終わり」ではなく、<span class="hl">みんなで実際にやってみる2時間</span>です。</p>
+    <div class="sec-eyebrow">なぜ、この夜を開くのか</div>
+    <h2 class="sec-title">同じ未来を願っているのに、<br>なぜ、応援し合うのはむずかしいんだろう。</h2>
+    <p>自然農、有機農業、パーマカルチャー、アグロフォレストリー。オーガニック、ヴィーガン、サステナブル、エシカル。</p>
+    <p>やり方は違っても、土と人と、次の世代の未来を大切にしたい気持ちは、きっと同じはずです。それなのに、方法や立場が違うだけで距離ができたり、お互いを応援しにくくなったりする。オーガニックの世界に長くいて、そんな場面を何度も見てきました。</p>
+
+    <h3 class="mincho" style="font-size:19px;margin:30px 0 12px;color:var(--ink);">小さな声のままでは、社会は動かない</h3>
+    <p>1970〜80年代のドイツには、環境保護、脱原発、反戦、女性の権利向上、有機農業の推進など、それぞれのテーマを掲げるさまざまな運動や取り組みがありました。目指すものも、考え方も、すべて同じではありませんでした。</p>
+    <p>それでも、別々に動いていた運動の一部がつながり、1980年に「緑の党」という一つの場をつくります。3年後には、連邦議会（日本でいう国会）に議席を得ました。そこからドイツでは、オーガニックが広がっていきます。</p>
+    <p><span class="hl">一つひとつの声だけでは届かないから、違いを残したまま、つながった。</span>私には、とても合理的な選択に見えます。</p>
+    <p>日本にも、近い未来を願って活動している人や団体はたくさんあります。でも、違いを越えて力を合わせることには、まだ大きな余地がある。まだ、その一歩を踏み出せていないだけだと思うんです。</p>
+    <div class="photo-pair">
+      <figure><img src="img/nakama/wheat.jpg" alt="北海道の麦畑で並んで笑う仲間たち" loading="lazy"><span class="cap">北海道の麦畑で</span></figure>
+      <figure><img src="img/nakama/balcony.jpg" alt="ドイツのビオホテルのバルコニーに集う仲間たち" loading="lazy"><span class="cap">ドイツのビオホテルで</span></figure>
+    </div>
+
+    <h3 class="mincho" style="font-size:19px;margin:30px 0 12px;color:var(--ink);">100年前も、最初は小さな集まりだった</h3>
+    <p>1924年、当時ドイツ領だったコーベルヴィッツ（現在のポーランド）で、ルドルフ・シュタイナーが「農業講座」を開きました。ヨーロッパ各地から、農業者を含む人たちが集まった小さな集まりです。この講座は、のちのバイオダイナミック農法、そしてオーガニック農業の歴史につながる原点の一つとされています。</p>
+    <p>大きな流れも、最初は誰かと誰かが集まって「ここから始めよう」と思うところから生まれる。</p>
+    <p><span class="hl">10月2日の夜は、「オーガニックが、あたりまえ。」な社会をつくる共創の、最初の場面です。</span>社会は一晩では変わりません。だからこそ、今ここから、みんなで始めたいんです。</p>
+
+    <div class="sec-eyebrow" style="margin-top:30px;">当日、みんなで考えたいこと</div>
+    <ul class="q-list">
+      <li>なぜ、同じ方向を向いているのに、応援し合えないのか</li>
+      <li>違いを抱えたまま、一緒に歩くには、何が必要なのか</li>
+      <li>応援すること、されることが苦しくなるのは、なぜなのか</li>
+    </ul>
+    <p>正解を教わる場ではなく、<span class="hl">みんなで問いを持ち寄って考える2時間</span>です。</p>
   </div>
 </section>
+
+<div class="statement-band"><p><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p><small>その最初の一歩を、ここから一緒に。</small></div>
 
 <!-- ============ ④ ゲスト紹介 ============ -->
 <section>
@@ -307,6 +344,7 @@ window.IOB_PHASE = (function(){
   <div class="wrap">
     <div class="sec-eyebrow">当日の2時間</div>
     <h2 class="sec-title">「いい話を聞いて終わり」にはしません</h2>
+    <p>前半45分は高田さんのお話。後半45分は少人数に分かれて「自分の活動や暮らしなら、どんな応援ができるだろう？」を一緒に考えます。<span class="hl">最後の30分ほどは懇親会</span>です。カメラはオフでも大丈夫です。</p>
     <ul class="timeline">
       <li>
         <div class="num">1</div>
@@ -347,31 +385,29 @@ window.IOB_PHASE = (function(){
           <p>この2時間をこの日だけで終わらせず、これからの「応援の循環」につなげます。</p>
         </div>
       </li>
+      <li>
+        <div class="num">7</div>
+        <div class="what">
+          <b>懇親会（最後の30分ほど）</b>
+          <p>参加したみなさんと、自由に話せる時間です。はじめましての方とも、久しぶりの仲間とも。</p>
+        </div>
+      </li>
     </ul>
+    <div class="photo-pair">
+      <figure><img src="img/nakama/hay.jpg" alt="北海道で干し草の上でくつろぐ仲間たち" loading="lazy"><span class="cap">北海道ツアーで</span></figure>
+      <figure><img src="img/nakama/bavaria.jpg" alt="ドイツのビオホテルで笑顔で集まる仲間たち" loading="lazy"><span class="cap">ドイツのビオホテルで</span></figure>
+    </div>
   </div>
 </section>
 
 <!-- ============ ⑥ こんな方に ============ -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">こんな方に</div>
-    <h2 class="sec-title">同窓会に来た方も、来られなかった方も</h2>
-    <div class="u-block">
-      <div class="label">9月20日の同窓会に参加した</div>
-      <p>あの日生まれた「応援」を、一日だけで終わらせないための最初の2時間です。</p>
-    </div>
-    <div class="u-block">
-      <div class="label">同窓会に参加していない</div>
-      <p>参加していなくても大丈夫です。専門家コース・コスメ専門家コースのみなさん全員に参加してほしいと思っています。</p>
-    </div>
-    <div class="u-block">
-      <div class="label">最近、IOBのみんなと少し離れていた</div>
-      <p>ここから、またつながり直す場所です。</p>
-    </div>
+    <div class="photo-one" style="margin-top:0;"><img src="img/nakama/nagano.jpg" alt="森のツリーハウス前に集まった仲間たち" loading="lazy"><span class="cap">長野の森で</span></div>
+    <p style="margin-top:18px;text-align:center;font-weight:700;">同窓会に来られなかったあなたも、<br>IOBで学んだことのない方も、大歓迎です。<br>この最初の一歩を、一緒に。</p>
   </div>
 </section>
 
-<!-- ============ ⑦ 申込フォーム ============ -->
 <section class="form-sec">
   <div class="wrap">
     <div class="sec-eyebrow">お申し込み</div>
@@ -404,6 +440,7 @@ window.IOB_PHASE = (function(){
           <label class="radio-opt"><input type="radio" name="bandStatus" value="参加済み" required>参加済み</label>
           <label class="radio-opt"><input type="radio" name="bandStatus" value="未参加・興味あり">未参加・興味あり</label>
           <label class="radio-opt"><input type="radio" name="bandStatus" value="わからない">わからない</label>
+          <label class="radio-opt"><input type="radio" name="bandStatus" value="IOB受講生ではない">IOBの受講生・卒業生ではない（はじめての方）</label>
         </div>
         <p style="font-size:12.5px;color:var(--sub);margin-top:8px;">※BAND未参加でもセミナーにはお申し込みいただけます。</p>
       </div>
