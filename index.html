@@ -7,7 +7,7 @@
 <title>「応援の循環」キックオフセミナー｜Institut für Organic Business</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --point:#f26b3b;
@@ -30,30 +30,45 @@
   .wrap{max-width:680px;margin:0 auto;padding:0 20px;}
   h1,h2,h3,.mincho{font-family:"Zen Old Mincho",serif;}
 
-  /* ===== ヒーロー ===== */
-  .hero{
-    position:relative;
-    background:linear-gradient(160deg,#3d2418 0%,#553727 46%,#7a4a2e 100%);
-    padding:70px 0 46px;
-    overflow:hidden;
-  }
-  .hero .wrap{position:relative;z-index:1;}
-  .hero .eyebrow{
-    color:#f2e4d6;font-size:13px;letter-spacing:.08em;margin-bottom:16px;font-weight:500;
-  }
-  .hero h1{
-    font-size:27px;font-weight:700;line-height:1.65;margin-bottom:18px;color:#fff;
-  }
-  .hero .lead{
-    font-size:15px;color:#f4e9dd;line-height:1.9;
-  }
-  .hero .logo{display:block;margin-top:26px;width:170px;max-width:52%;height:auto;
-    filter:brightness(0) invert(1);opacity:.92;}
+  /* ===== ヒーロー（同窓会LPの型） ===== */
+  .hero{text-align:center;padding:48px 0 34px;
+    background:radial-gradient(120% 90% at 50% -10%,#fff7ee 0%,var(--bg) 60%);overflow:hidden;}
+  .hero .wrap{max-width:980px;}
+  .hero .pill{display:inline-block;font-family:"Zen Maru Gothic",sans-serif;font-weight:700;
+    font-size:14px;letter-spacing:.06em;color:#fff;background:var(--point);
+    padding:.45em 1.3em;border-radius:999px;box-shadow:0 8px 22px rgba(242,107,59,.35);transform:rotate(-1.5deg);}
+  .hero .sub{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:16px;color:var(--second);
+    letter-spacing:.06em;margin:14px 0 0;transform:rotate(-1deg);}
+  .hero h1{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(2.5rem,9vw,4.6rem);
+    line-height:1.2;color:var(--ink);margin:.25em 0 .2em;letter-spacing:.01em;}
+  .hero h1 .pop{color:var(--point);position:relative;white-space:nowrap;}
+  .hero h1 .pop::after{content:"";position:absolute;left:-4%;right:-4%;bottom:.08em;height:.28em;
+    background:rgba(0,133,201,.22);border-radius:99px;z-index:-1;}
+  .hero .lede{font-family:"Zen Maru Gothic",sans-serif;font-weight:500;font-size:clamp(1rem,3.4vw,1.25rem);
+    color:var(--sub);line-height:1.8;}
+  .mosaic{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:26px auto 0;max-width:900px;position:relative;}
+  .mosaic figure{border-radius:14px;overflow:hidden;border:4px solid #fff;box-shadow:0 12px 28px rgba(85,55,39,.16);}
+  .mosaic img{width:100%;height:100%;object-fit:cover;display:block;}
+  .mosaic .m1{grid-column:span 6;aspect-ratio:16/9;}
+  .mosaic .m2,.mosaic .m3,.mosaic .m4{grid-column:span 2;aspect-ratio:1/1;}
+  .mosaic .m5,.mosaic .m6{grid-column:span 3;aspect-ratio:3/2;}
+  .mosaic .m1 img{object-position:center 62%;}
+  .mosaic .tag{position:absolute;left:14px;top:14px;background:rgba(255,255,255,.94);color:var(--ink);
+    font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:13px;padding:.4em 1em;border-radius:99px;
+    box-shadow:0 4px 12px rgba(85,55,39,.16);}
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px auto 0;max-width:900px;}
+  .fact{background:var(--white);border-radius:16px;padding:16px 8px;box-shadow:0 10px 26px rgba(85,55,39,.12);border:2px solid #fff;}
+  .fact .k{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:11px;color:var(--second);letter-spacing:.08em;}
+  .fact .v{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:clamp(1rem,3.6vw,1.3rem);color:var(--ink);line-height:1.4;margin-top:2px;}
+  .fact .s{font-size:11px;color:var(--sub);line-height:1.5;}
+  .fact.free .v{color:var(--point);}
+  .hero .logo{display:block;margin:22px auto 0;width:150px;height:auto;}
   @media(max-width:480px){
-    .hero{padding:52px 0 38px;}
-    .hero h1{font-size:23px;line-height:1.7;}
-    .hero .lead{font-size:14.5px;}
-    .hero .logo{width:150px;margin-top:22px;}
+    .hero{padding:38px 0 28px;}
+    .hero .pill{font-size:12.5px;}
+    .hero .sub{font-size:14px;}
+    .mosaic{gap:6px;}
+    .mosaic .tag{font-size:11.5px;left:10px;top:10px;}
     section{padding:32px 0;}
   }
 
@@ -202,16 +217,31 @@ window.IOB_PHASE = (function(){
 <!-- ============ ① FV ============ -->
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">IOB オーガニック専門家コース・コスメ専門家コースのみなさんへ<br>BAND「IOB 応援の循環 2026」キックオフ</div>
+    <span class="pill">🌱 IOB 専門家コース生・卒業生へ</span>
+    <p class="sub">🌿 「応援の循環」キックオフ</p>
     <div data-phase="open">
-      <h1>高田洋平さんと一緒に、<br>「応援が巡る関係」を体験する2時間。</h1>
-      <div class="lead">2026年10月2日（金）20:00〜22:00・オンライン（Google Meet）・参加費無料</div>
+      <h1>違うまま、<br><span class="pop">つながろう。</span></h1>
+      <p class="lede">やり方は違っても、願う未来は同じ。<br>違いを残したまま、一緒に進む最初の夜。</p>
     </div>
     <div data-phase="close">
-      <h1>高田洋平さんと一緒に、<br>「応援が巡る関係」を体験した2時間。</h1>
-      <div class="lead">2026年10月2日（金）に開催しました。<br>ご参加ありがとうございました。</div>
+      <h1>違うまま、<br><span class="pop">つながった。</span></h1>
+      <p class="lede">2026年10月2日（金）に開催しました。<br>ご参加ありがとうございました。</p>
     </div>
-    <img class="logo" src="iob-logo-orange.png" alt="Institut für Organic Business" width="170">
+    <div class="mosaic">
+      <figure class="m1"><img src="img/nakama/hero-group.jpg" alt="北海道の大地に大勢で集まった仲間たち"></figure>
+      <span class="tag">📸 あの日の仲間と、ここからまた。</span>
+      <figure class="m2"><img src="img/nakama/wheat.jpg" alt="北海道の麦畑で並んで笑う仲間たち"></figure>
+      <figure class="m3"><img src="img/nakama/balcony.jpg" alt="ドイツのビオホテルのバルコニーに集う仲間たち"></figure>
+      <figure class="m4"><img src="img/nakama/hay.jpg" alt="北海道で干し草の上でくつろぐ仲間たち"></figure>
+      <figure class="m5"><img src="img/nakama/bavaria.jpg" alt="ドイツのビオホテルで笑顔で集まる仲間たち"></figure>
+      <figure class="m6"><img src="img/nakama/nagano.jpg" alt="森のツリーハウス前に集まった仲間たち"></figure>
+    </div>
+    <div class="facts" data-phase="open">
+      <div class="fact"><div class="k">DATE</div><div class="v">10.2<span style="font-size:.7em">(金)</span></div><div class="s">2026年</div></div>
+      <div class="fact"><div class="k">TIME</div><div class="v">20:00–22:00</div><div class="s">日本時間</div></div>
+      <div class="fact free"><div class="k">JOIN</div><div class="v">無料</div><div class="s">オンライン<br>（Google Meet）</div></div>
+    </div>
+    <img class="logo" src="iob-logo-orange.png" alt="Institut für Organic Business" width="150">
   </div>
 </header>
 
