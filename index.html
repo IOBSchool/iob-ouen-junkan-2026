@@ -39,7 +39,7 @@
     padding:.45em 1.3em;border-radius:999px;box-shadow:0 8px 22px rgba(242,107,59,.35);transform:rotate(-1.5deg);}
   .hero .sub{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:16px;color:var(--second);
     letter-spacing:.06em;margin:14px 0 0;transform:rotate(-1deg);}
-  .hero h1{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(2.5rem,9vw,4.6rem);
+  .hero h1{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(2.2rem,8.6vw,4.4rem);
     line-height:1.2;color:var(--ink);margin:.25em 0 .2em;letter-spacing:.01em;}
   .hero h1 .pop{color:var(--point);position:relative;white-space:nowrap;}
   .hero h1 .pop::after{content:"";position:absolute;left:-4%;right:-4%;bottom:.08em;height:.28em;
@@ -77,6 +77,12 @@
   .photo-pair img,.photo-one img{width:100%;height:100%;object-fit:cover;display:block;}
   .photo-pair .cap,.photo-one .cap{position:absolute;left:8px;bottom:8px;background:rgba(242,107,59,.94);color:#fff;
     font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:11px;padding:.25em .8em;border-radius:99px;}
+  .hero-cta{display:inline-block;margin-top:22px;background:var(--point);color:#fff;text-decoration:none;font-weight:700;
+    font-size:17px;padding:16px 34px;border-radius:999px;box-shadow:0 10px 24px rgba(242,107,59,.35);}
+  .hero-cta small{display:block;font-size:12px;font-weight:500;opacity:.92;}
+  .final-call{text-align:center;}
+  .final-call p{margin-bottom:16px;}
+  .final-call .big{font-family:"Zen Old Mincho",serif;font-weight:900;font-size:clamp(1.25rem,5.4vw,1.7rem);color:var(--point);line-height:1.6;}
   .q-list{list-style:none;margin:18px 0;padding:0;}
   .q-list li{background:var(--white);border:1px solid var(--line);border-left:5px solid var(--second);border-radius:10px;padding:12px 16px;margin-bottom:10px;font-weight:700;line-height:1.7;}
   @media(max-width:480px){
@@ -234,11 +240,11 @@ window.IOB_PHASE = (function(){
 <header class="hero">
   <div class="wrap">
     <span class="pill">🌱 同じ未来を願う、すべての仲間へ</span>
-    <p class="kicker">1924年、ドイツの小さな集まりから<br>オーガニックの歩みが始まったように。</p>
+    <p class="kicker">1924年。オーガニックの大きな流れも、<br>最初は小さな集まりから始まりました。</p>
     <div data-phase="open">
-      <h1>ここから、<br><span class="pop">共創が始まる。</span></h1>
+      <h1>ここから、<br><span class="pop">共創を始めよう。</span></h1>
       <p class="statement"><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p>
-      <p class="lede">違いを抱えたまま、<br>一緒に歩き出す最初の夜。</p>
+      <p class="lede">やり方も、立場も、考え方も違う。<br>それでも、目指す未来は重なっている。<br>だから10月2日の夜、<br>「これから何を一緒にできるだろう？」<br>を考えるために集まります。</p>
     </div>
     <div data-phase="close">
       <h1>ここから、<br><span class="pop">共創が始まった。</span></h1>
@@ -254,6 +260,7 @@ window.IOB_PHASE = (function(){
       <div class="fact"><div class="k">TIME</div><div class="v">20:00–22:00</div><div class="s">日本時間</div></div>
       <div class="fact free"><div class="k">JOIN</div><div class="v">無料</div><div class="s">オンライン<br>（Google Meet）</div></div>
     </div>
+    <div data-phase="open"><a class="hero-cta" href="#applyForm">明日の共創の場に参加する<small>参加無料・どなたでも／申込は20:00まで</small></a></div>
     <img class="logo" src="iob-logo-orange.png" alt="Institut für Organic Business" width="150">
   </div>
 </header>
@@ -302,14 +309,14 @@ window.IOB_PHASE = (function(){
     <p>大きな流れも、最初は誰かと誰かが集まって「ここから始めよう」と思うところから生まれる。</p>
     <p><span class="hl">10月2日の夜は、「オーガニックが、あたりまえ。」な社会をつくる共創の、最初の場面です。</span>社会は一晩では変わりません。だからこそ、今ここから、みんなで始めたいんです。</p>
 
-    <div class="sec-eyebrow" style="margin-top:30px;">当日、みんなで考えたいこと</div>
+    <p style="margin-top:26px;">この夜に、ひとつの正解を出すことが目的ではありません。持ち帰ってほしいのは、「自分一人で何ができるか」だけではなく、<span class="hl">「この人たちとなら、何ができるだろう」という新しい問い</span>です。</p>
+    <div class="sec-eyebrow" style="margin-top:22px;">その入口として、みんなで考える3つの問い</div>
     <ul class="q-list">
       <li>なぜ、同じ方向を向いているのに、応援し合えないのか</li>
       <li>違いを抱えたまま、一緒に歩くには、何が必要なのか</li>
       <li>応援すること、されることが苦しくなるのは、なぜなのか</li>
     </ul>
-    <p>正解を教わる場ではなく、<span class="hl">みんなで問いを持ち寄って考える2時間</span>です。</p>
-  </div>
+      </div>
 </section>
 
 <div class="statement-band"><p><span class="nw">「オーガニックが、あたりまえ。」</span><br>な社会へ。</p><small>その最初の一歩を、ここから一緒に。</small></div>
@@ -319,6 +326,7 @@ window.IOB_PHASE = (function(){
   <div class="wrap">
     <div class="sec-eyebrow">ゲスト</div>
     <h2 class="sec-title">高田洋平さん</h2>
+    <p>違う立場の人たちが、同じになることなく、応援し合える関係をどうつくるのか。その入口を一緒に考えるために、今回、高田洋平さんに来ていただきます。</p>
     <div class="profile-card">
       <img class="profile-photo" src="img/takada-profile.jpg" alt="高田洋平さん" loading="lazy">
       <div class="name">高田 洋平（たかだ ようへい）さん</div>
@@ -404,7 +412,15 @@ window.IOB_PHASE = (function(){
 <section>
   <div class="wrap">
     <div class="photo-one" style="margin-top:0;"><img src="img/nakama/nagano.jpg" alt="森のツリーハウス前に集まった仲間たち" loading="lazy"><span class="cap">長野の森で</span></div>
-    <p style="margin-top:18px;text-align:center;font-weight:700;">同窓会に来られなかったあなたも、<br>IOBで学んだことのない方も、大歓迎です。<br>この最初の一歩を、一緒に。</p>
+    <div class="final-call" style="margin-top:26px;">
+      <p class="big"><span class="nw">「オーガニックが、あたりまえ。」</span></p>
+      <p>その未来が本当に来てほしいと思うなら、<br>明日の2時間を、そのための小さな一歩にしませんか。</p>
+      <p>大きなことを決める必要はありません。<br>誰かと同じ意見になる必要もありません。<br>まずは集まって、違うまま話してみる。<br>そして「私たちは、これから何を一緒にできるだろう」と考え始める。</p>
+      <p>100年前の小さな集まりも、<br>最初からその先のすべてが見えていたわけではないはずです。<br>社会は一晩では変わらない。だから、今から始める。</p>
+      <p>IOBで学んできた方も。同窓会に来られなかった方も。<br>今回はじめてIOBを知った方も。<br><b>同じ未来を願っているなら、明日、この場にいてください。</b></p>
+      <p class="big">一人で早く行くより、<br>みんなで遠くへ。</p>
+      <div data-phase="open"><a class="hero-cta" href="#applyForm">10月2日の共創の場に参加する<small>10/2（金）20:00〜22:00・オンライン・参加無料／申込は20:00まで</small></a></div>
+    </div>
   </div>
 </section>
 
